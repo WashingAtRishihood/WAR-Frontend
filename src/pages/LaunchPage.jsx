@@ -1,30 +1,29 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/rishihood-logo.webp";
-// Removed: import "./LaunchPage.css";
 
 function LaunchPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display']">
             {/* Header */}
-            <header className="mb-8">
+            <header className="p-6">
                 <img
                     src={logo}
                     alt="Rishihood University Logo"
-                    className="w-32 h-32 object-contain mx-auto"
+                    className="w-28 sm:w-32 md:w-36 object-contain"
                 />
             </header>
 
             {/* Main Section */}
-            <main className="flex flex-col items-center">
-                <h1 className="text-3xl font-bold text-center mb-8">
+            <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#333] leading-snug mb-8">
                     Rishihood University <br /> Laundry Service
                 </h1>
                 <button
                     onClick={() => navigate("/home")}
-                    className="px-8 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+                    className="bg-[#a30c34] hover:bg-[#8b092d] text-white px-8 py-3 sm:px-7 sm:py-3 text-lg sm:text-l rounded-lg shadow transition"
                 >
                     Let's Start
                 </button>
