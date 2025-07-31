@@ -6,30 +6,37 @@ function HomePage() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display']">
             {/* Header */}
-            <header className="mb-8">
-                <img src={logo} alt="Rishihood University Logo" className="w-32 h-32 object-contain mx-auto" />
+            <header className="p-6">
+                <img
+                    src={logo}
+                    alt="Rishihood University Logo"
+                    className="w-28 sm:w-32 md:w-36 object-contain"
+                />
             </header>
 
             {/* Main Section */}
-            <main className="flex flex-col items-center">
-                <h1 className="text-3xl font-bold text-center mb-8">Who you are?</h1>
-                <div className="flex gap-8">
+            <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#333] mb-10">
+                    Who you are?
+                </h1>
+
+                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
                     <div
-                        className="px-8 py-6 bg-white rounded-lg shadow cursor-pointer hover:bg-green-100 text-lg font-semibold"
+                        className="bg-white hover:bg-[#f9ecef] shadow-md rounded-lg px-10 py-6 cursor-pointer text-lg sm:text-xl font-medium transition"
                         onClick={() => navigate("/student/login")}
                     >
                         Student
                     </div>
                     <div
-                        className="px-8 py-6 bg-white rounded-lg shadow cursor-pointer hover:bg-blue-100 text-lg font-semibold"
+                        className="bg-white hover:bg-[#f9ecef] shadow-md rounded-lg px-10 py-6 cursor-pointer text-lg sm:text-xl font-medium transition"
                         onClick={() => navigate("/faculty/login")}
                     >
                         Faculty
                     </div>
                     <div
-                        className="px-8 py-6 bg-white rounded-lg shadow cursor-pointer hover:bg-yellow-100 text-lg font-semibold"
+                        className="bg-white hover:bg-[#f9ecef] shadow-md rounded-lg px-10 py-6 cursor-pointer text-lg sm:text-xl font-medium transition"
                         onClick={() => navigate("/washerman/login")}
                     >
                         Washer Man

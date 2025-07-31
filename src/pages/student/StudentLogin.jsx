@@ -1,40 +1,50 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
-// Removed: import "./StudentLogin.css";
 
 function StudentLogin() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display']">
             {/* Header */}
-            <header className="mb-8">
-                <img src={logo} alt="Rishihood University Logo" className="w-32 h-32 object-contain mx-auto" />
+            <header className="p-6">
+                <img
+                    src={logo}
+                    alt="Rishihood University Logo"
+                    className="w-28 sm:w-32 md:w-36 object-contain"
+                />
             </header>
 
-            {/* Main Content */}
-            <main className="flex flex-col items-center w-full">
-                <h1 className="text-3xl font-bold text-center mb-8">Login</h1>
-                <form className="flex flex-col gap-4 w-full max-w-sm bg-white p-8 rounded-lg shadow">
+            {/* Main Section */}
+            <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-[#333] mb-8">
+                    Student Login
+                </h1>
+
+                <form className="flex flex-col gap-5 w-full max-w-sm">
                     <input
                         type="text"
                         placeholder="Enter your name"
-                        className="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                        className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
                     />
                     <input
                         type="text"
-                        placeholder="Enter your enrollment id"
-                        className="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                        placeholder="Enter your enrollment ID"
+                        className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
                     />
-                    <button type="button" className="px-6 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition">
+                    <button
+                        type="button"
+                        className="mt-4 bg-[#a30c34] hover:bg-[#8b092d] text-white font-medium py-3 rounded-lg transition text-lg"
+                    >
                         Continue
                     </button>
                 </form>
-                <p className="mt-4 text-center text-gray-600">
-                    Don't have an account?{' '}
+
+                <p className="mt-6 text-gray-700 text-base">
+                    Don’t have an account?{" "}
                     <span
-                        className="text-green-600 hover:underline cursor-pointer"
+                        className="text-[#c45c29] font-medium hover:underline cursor-pointer"
                         onClick={() => navigate("/student/signup")}
                     >
                         Sign up
