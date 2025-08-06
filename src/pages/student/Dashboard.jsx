@@ -6,6 +6,7 @@ import logo from "../../assets/rishihood-logo.webp";
 const Dashboard = () => {
     const [selectedCount, setSelectedCount] = useState(null);
     const [customCount, setCustomCount] = useState("");
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleConfirm = () => {
         const count = selectedCount || Number(customCount);
@@ -18,8 +19,9 @@ const Dashboard = () => {
         setSelectedCount(null);
         setCustomCount("");
         
-        // Show success message or redirect
-        alert(`Successfully submitted ${count} clothes for laundry!`);
+        // Show success message
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000); // Hide after 3 seconds
     };
 
     const handleNumberClick = (num) => {
@@ -39,6 +41,15 @@ const Dashboard = () => {
                     <h3 className="text-xl sm:text-2xl font-bold mb-6 text-[#333] text-center">
                         Add Clothes for Laundry
                     </h3>
+
+                    {/* Success Message */}
+                    {showSuccess && (
+                        <div className="mb-6 w-full bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p className="text-green-800 text-center font-medium">
+                                ✓ Successfully submitted clothes for laundry!
+                            </p>
+                        </div>
+                    )}
 
                     {/* Custom Count Input */}
                     <input
