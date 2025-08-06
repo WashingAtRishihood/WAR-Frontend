@@ -76,8 +76,8 @@ function Navbar() {
                     <Link to="/student/completed" className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm">
                         Completed
                     </Link>
-                    <Link to="/student/dashboard" className="flex items-center justify-center bg-[#a30c34] text-white p-2 rounded-full hover:bg-[#8b092d] transition-colors duration-200 w-10 h-10">
-                        <Plus className="w-5 h-5" />
+                    <Link to="/student/dashboard">
+                        <p>Dashboard</p>
                     </Link>
                     <Link to="/student/incompleted" className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm">
                         Incompleted
