@@ -19,7 +19,7 @@ function HomePage() {
 
             <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#333] mb-10">
-                    Who you are?
+                    Who are you?
                 </h1>
 
                 <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">

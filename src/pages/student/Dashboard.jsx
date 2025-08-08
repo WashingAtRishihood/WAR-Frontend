@@ -1,21 +1,27 @@
 import React, { useState } from "react";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
 
 const Dashboard = () => {
     const [selectedCount, setSelectedCount] = useState(null);
     const [customCount, setCustomCount] = useState("");
-    const [history, setHistory] = useState([]);
-
-    const today = new Date().toISOString().split("T")[0];
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleConfirm = () => {
         const count = selectedCount || Number(customCount);
         if (!count || count <= 0) return;
-        setHistory((prev) => [...prev, { date: today, count }]);
+        
+        // Backend call to submit clothes order
+        console.log("Submitting clothes order:", count);
+        
+        // Reset form
         setSelectedCount(null);
         setCustomCount("");
+        
+        // Show success message
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000); // Hide after 3 seconds
     };
 
     const handleNumberClick = (num) => {
@@ -30,11 +36,20 @@ const Dashboard = () => {
 
             {/* Main Content */}
             <main className="flex flex-col items-center flex-1 px-3 sm:px-6 py-28 sm:py-32 w-full max-w-2xl mx-auto">
-                {/* Clothes selection */}
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 flex flex-col items-center w-full mb-8">
+                {/* Add Clothes Section */}
+                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 flex flex-col items-center w-full">
                     <h3 className="text-xl sm:text-2xl font-bold mb-6 text-[#333] text-center">
-                        Select the count of clothes
+                        Add Clothes for Laundry
                     </h3>
+
+                    {/* Success Message */}
+                    {showSuccess && (
+                        <div className="mb-6 w-full bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p className="text-green-800 text-center font-medium">
+                                ✓ Successfully submitted clothes for laundry!
+                            </p>
+                        </div>
+                    )}
 
                     {/* Custom Count Input */}
                     <input
@@ -68,44 +83,13 @@ const Dashboard = () => {
                         ))}
                     </div>
 
-                    {/* Confirm Button */}
+                    {/* Submit Button */}
                     <button
                         className="px-8 py-3 rounded-lg bg-[#a30c34] hover:bg-[#8b092d] text-white text-lg font-semibold shadow-md transition w-full sm:w-auto"
                         onClick={handleConfirm}
                     >
-                        Confirm
+                        Submit
                     </button>
-                </div>
-
-                {/* Laundry History */}
-                <div className="bg-white rounded-lg shadow p-5 sm:p-8 w-full mb-28 sm:mb-10">
-                    <h3 className="text-lg sm:text-xl font-semibold mb-4">
-                        Your Laundry History
-                    </h3>
-                    {history.length === 0 ? (
-                        <p className="text-gray-500 text-center text-base sm:text-lg">
-                            No clothes submitted yet
-                        </p>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse min-w-[300px]">
-                                <thead>
-                                    <tr>
-                                        <th className="py-2 px-4 border-b">Date</th>
-                                        <th className="py-2 px-4 border-b">Clothes Count</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {history.map((item, index) => (
-                                        <tr key={index}>
-                                            <td className="py-2 px-4 border-b">{item.date}</td>
-                                            <td className="py-2 px-4 border-b">{item.count}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
                 </div>
             </main>
 
