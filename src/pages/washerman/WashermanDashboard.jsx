@@ -1,21 +1,14 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import Navbar from "./components/Navbar";
 
-const WashermanDashboard = () => {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        navigate("/washerman/home");
-    }, [navigate]);
-
-    return (
-        <div className="min-h-screen bg-[#faf6f3] flex items-center justify-center">
-            <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a30c34] mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading...</p>
-            </div>
-        </div>
-    );
-};
+function WashermanDashboard() {
+	return (
+		<div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+			<h1 className="text-2xl font-bold mb-4">Washerman Dashboard</h1>
+			<p className="text-gray-600">This is a placeholder for the washerman dashboard page.</p>
+			<Navbar />
+		</div>
+	);
+}
 
 export default WashermanDashboard;

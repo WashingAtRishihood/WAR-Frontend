@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/rishihood-logo.webp";
-import { Bell, User, LogOut, UserCheck, Clock, Plus, Menu, X, Home, FileText, Settings, Shield, Users, UserCircle, Star } from "lucide-react";
+import { Bell, User, LogOut, UserCheck, Clock, Plus, Menu, X, Home, FileText, Settings, Shield, UserCircle, Star } from "lucide-react";
 
 function Navbar() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -14,11 +14,14 @@ function Navbar() {
     const getServiceStatus = () => {
         const now = new Date();
         const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
         const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
-        // Service hours: Monday to Friday, 8 AM to 6 PM
+        // Service hours: Monday to Friday, 8:30 AM to 6:00 PM
         const isWeekday = currentDay >= 1 && currentDay <= 5;
-        const isServiceHours = currentHour >= 8 && currentHour < 18;
+        const afterStart = currentHour > 8 || (currentHour === 8 && currentMinute >= 30);
+        const beforeEnd = currentHour < 18;
+        const isServiceHours = afterStart && beforeEnd;
 
         return {
             isOpen: isWeekday && isServiceHours,
@@ -63,50 +66,59 @@ function Navbar() {
         <>
             <nav className="fixed top-0 left-0 w-full bg-[#faf6f3] shadow-md px-4 sm:px-6 py-3 flex items-center justify-between font-medium z-50">
                 {/* Left: Logo */}
-                <Link to="/" className="flex items-center">
+                <button className="flex items-center focus:outline-none" onClick={() => window.location.reload()}>
                     <img
                         src={logo}
                         alt="Rishihood Logo"
                         className="w-24 sm:w-28 md:w-32 object-contain"
                     />
-                </Link>
+                </button>
 
                 {/* Center: Dashboard Navigation - Desktop Only */}
-                <div className="hidden lg:flex space-x-4 text-gray-700 absolute left-1/2 transform -translate-x-1/2">
-                    <Link to="/student/completed" className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm">
+                <div className="hidden lg:flex items-center space-x-6 text-gray-700 absolute left-1/2 transform -translate-x-1/2">
+                    <Link
+                        to="/student/completed"
+                        className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
+                    >
                         Completed
                     </Link>
-                    <Link to="/student/dashboard">
-                        <p>Dashboard</p>
+                    <Link
+                        to="/student/dashboard"
+                        className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
+                    >
+                        Dashboard
                     </Link>
-                    <Link to="/student/incompleted" className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm">
+                    <Link
+                        to="/student/incompleted"
+                        className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
+                    >
                         Incompleted
                     </Link>
                 </div>
 
                 {/* Right: Notifications, Service Hours & Profile */}
-                <div className="flex items-center space-x-2 sm:space-x-4 relative">
+                <div className="flex items-center space-x-3 sm:space-x-4 relative flex-shrink-0">
                     {/* 🔔 Notification Icon */}
                     <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 group">
-                        <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-[#a30c34]" />
+                        <Bell className="w-5 h-5 text-gray-600 group-hover:text-[#a30c34]" />
                     </button>
 
                     {/* 🕐 Service Hours Indicator - Desktop Only */}
-                    <div className="hidden sm:flex items-center space-x-2 px-2 sm:px-3 py-2 rounded-full bg-white border border-gray-200 shadow-sm relative group">
-                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
-                        <div className="flex items-center space-x-1">
-                            <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${serviceStatus.isOpen ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-full bg-white border border-gray-200 shadow-sm relative group">
+                        <Clock className="w-4 h-4 text-gray-600" />
+                        <div className="flex items-center space-x-2">
+                            <div className={`w-2 h-2 rounded-full ${serviceStatus.isOpen ? 'bg-green-500' : 'bg-red-500'}`}></div>
                             <span className={`text-xs font-medium ${serviceStatus.color}`}>
                                 {serviceStatus.status}
                             </span>
                         </div>
 
                         {/* Hover Tooltip */}
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-4.5 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-4 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                             <div className="text-center">
                                 <div className="font-semibold mb-1">Laundry Hours</div>
                                 <div>Monday - Saturday</div>
-                                <div>8:00 AM - 6:00 PM</div>
+                                <div>8:30 AM - 6:00 PM</div>
                                 <div className="text-gray-300 text-xs mt-1">Closed on Sundays</div>
                             </div>
                             {/* Arrow */}
@@ -120,18 +132,18 @@ function Navbar() {
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 group"
                         >
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-[#a30c34] to-[#d63384] rounded-full flex items-center justify-center">
-                                <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                            <div className="w-8 h-8 bg-gradient-to-r from-[#a30c34] to-[#d63384] rounded-full flex items-center justify-center">
+                                <User className="w-4 h-4 text-white" />
                             </div>
-                            <span className="hidden sm:block text-gray-700 group-hover:text-[#a30c34] text-sm">Ritesh</span>
+                            <span className="hidden sm:block text-gray-700 group-hover:text-[#a30c34] text-sm font-medium">Ritesh</span>
                         </button>
 
                         {isDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white border border-gray-200 shadow-xl rounded-xl z-50 overflow-hidden">
+                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl rounded-xl z-50 overflow-hidden">
                                 <div className="p-3 border-b border-gray-100">
                                     <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#a30c34] to-[#d63384] rounded-full flex items-center justify-center">
-                                            <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                                        <div className="w-10 h-10 bg-gradient-to-r from-[#a30c34] to-[#d63384] rounded-full flex items-center justify-center">
+                                            <User className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
                                             <p className="font-semibold text-gray-800 text-sm">Ritesh Kumar</p>
@@ -149,14 +161,7 @@ function Navbar() {
                                         <UserCheck className="w-4 h-4" />
                                         <span>My Profile</span>
                                     </Link>
-                                    <Link
-                                        to="/about-us"
-                                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 transition-colors duration-200"
-                                        onClick={() => setIsDropdownOpen(false)}
-                                    >
-                                        <Users className="w-4 h-4" />
-                                        <span>About Us</span>
-                                    </Link>
+
                                     <button
                                         onClick={() => {
                                             setIsDropdownOpen(false);
@@ -211,8 +216,8 @@ function Navbar() {
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-200">
                             <div>
-                                <h3 className="font-semibold text-gray-800 text-lg">Laundry Service</h3>
-                                <p className="text-xs text-gray-500">Rishihood University</p>
+                                <h3 className="font-semibold text-gray-800 text-lg">Rishihood University</h3>
+                                <p className="text-xs text-gray-500">Laundry Service</p>
                             </div>
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
@@ -258,13 +263,7 @@ function Navbar() {
                             >
                                 <span className="text-base font-medium">My Profile</span>
                             </Link>
-                            <Link
-                                to="/about-us"
-                                className="flex items-center px-6 py-4 hover:bg-gray-50 text-gray-700 transition-colors duration-200"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                <span className="text-base font-medium">About us</span>
-                            </Link>
+
                             <button
                                 onClick={() => {
                                     setIsMobileMenuOpen(false);

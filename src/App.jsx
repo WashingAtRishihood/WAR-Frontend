@@ -9,15 +9,6 @@ import Completed from './pages/student/Completed';
 import Incompleted from './pages/student/Incompleted';
 import WashermanLogin from './pages/washerman/WashermanLogin';
 import WashermanDashboard from './pages/washerman/WashermanDashboard';
-import WashermanHome from './pages/washerman/Home';
-import WashermanReceived from './pages/washerman/Received';
-import WashermanReady from './pages/washerman/Ready';
-import AboutUs from './pages/AboutUs';
-import FacultyLogin from './pages/faculty/FacultyLogin';
-import FacultySignup from './pages/faculty/FacultySignup';
-import FacultyDashboard from './pages/faculty/Dashboard';
-import FacultyCompleted from './pages/faculty/Completed';
-import FacultyIncompleted from './pages/faculty/Incompleted';
 
 function App() {
     return (
@@ -33,16 +24,6 @@ function App() {
                 <Route path="/student/incompleted" element={<Incompleted />} />
                 <Route path="/washerman/login" element={<WashermanLogin />} />
                 <Route path="/washerman/dashboard" element={<WashermanDashboard />} />
-                <Route path="/washerman/home" element={<WashermanHome />} />
-                <Route path="/washerman/received" element={<WashermanReceived />} />
-                <Route path="/washerman/ready" element={<WashermanReady />} />
-                <Route path="/about-us" element={<AboutUs />} />
-                <Route path="/faculty/login" element={<FacultyLogin />} />
-                <Route path="/faculty/signup" element={<FacultySignup />} />
-                <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
-                <Route path="/faculty/completed" element={<FacultyCompleted />} />
-                <Route path="/faculty/incompleted" element={<FacultyIncompleted />} />
-
             </Routes>
         </Router>
     );
