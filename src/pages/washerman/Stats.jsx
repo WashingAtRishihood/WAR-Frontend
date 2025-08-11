@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { BarChart3, TrendingUp, Clock, CheckCircle, Package, Activity } from "lucide-react";
 import logo from "../../assets/rishihood-logo.webp";
 
