@@ -66,13 +66,11 @@ function Navbar() {
         <>
             <nav className="fixed top-0 left-0 w-full bg-[#faf6f3] shadow-md px-4 sm:px-6 py-3 flex items-center justify-between font-medium z-50">
                 {/* Left: Logo */}
-                <button className="flex items-center focus:outline-none" onClick={() => window.location.reload()}>
-                    <img
-                        src={logo}
-                        alt="Rishihood Logo"
-                        className="w-24 sm:w-28 md:w-32 object-contain"
-                    />
-                </button>
+                <img
+                    src={logo}
+                    alt="Rishihood Logo"
+                    className="w-24 sm:w-28 md:w-32 object-contain"
+                />
 
                 {/* Center: Dashboard Navigation - Desktop Only */}
                 <div className="hidden lg:flex items-center space-x-6 text-gray-700 absolute left-1/2 transform -translate-x-1/2">

@@ -28,6 +28,7 @@ function App() {
                 <Route path="/washerman/dashboard" element={<WashermanDashboard />} />
                 <Route path="/washerman/stats" element={<Stats />} />
                 <Route path="/washerman/student-lookup" element={<StudentLookup />} />
+
             </Routes>
         </Router>
     );

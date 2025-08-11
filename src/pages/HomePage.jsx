@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { GraduationCap, UserCheck } from "lucide-react";
 import logo from "../assets/rishihood-logo.webp";
 import { FaUserGraduate, FaTshirt } from "react-icons/fa";
 
@@ -34,7 +35,6 @@ function HomePage() {
                     className="w-28 sm:w-32 md:w-36 object-contain drop-shadow-lg"
                 />
             </header>
-
             {/* Main */}
             <main className="flex flex-col items-center justify-center flex-1 text-center px-4 relative z-10 w-full">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#333] mb-10">
