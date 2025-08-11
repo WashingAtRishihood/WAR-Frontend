@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaTshirt, FaCalendarAlt } from "react-icons/fa";
 import Navbar from "./components/Navbar";
+import logo from "../../assets/rishihood-logo.webp";
 
 function WashermanDashboard() {
   const [selectedTab, setSelectedTab] = useState("B");
@@ -47,17 +48,15 @@ function WashermanDashboard() {
         <div className="flex items-center gap-4 mb-6">
           <div className="flex border rounded-lg overflow-hidden">
             <button
-              className={`px-4 py-2 font-semibold ${
-                selectedTab === "B" ? "bg-[#a30c34] text-white" : "bg-white"
-              }`}
+              className={`px-4 py-2 font-semibold ${selectedTab === "B" ? "bg-[#a30c34] text-white" : "bg-white"
+                }`}
               onClick={() => setSelectedTab("B")}
             >
               B
             </button>
             <button
-              className={`px-4 py-2 font-semibold ${
-                selectedTab === "G" ? "bg-[#a30c34] text-white" : "bg-white"
-              }`}
+              className={`px-4 py-2 font-semibold ${selectedTab === "G" ? "bg-[#a30c34] text-white" : "bg-white"
+                }`}
               onClick={() => setSelectedTab("G")}
             >
               G

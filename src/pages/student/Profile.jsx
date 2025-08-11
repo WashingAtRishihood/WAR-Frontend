@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { User, Mail, Phone, BookOpen, Calendar, MapPin, Edit, Save, X, ArrowLeft, Package } from "lucide-react";
 import logo from "../../assets/rishihood-logo.webp";
 
 const Profile = () => {
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
+    const [studentData, setStudentData] = useState(null);
     const [profileData, setProfileData] = useState({
         name: "Ritesh Kumar",
         email: "ritesh.kumar2024@nst.rishihood.edu.in",
@@ -24,6 +26,8 @@ const Profile = () => {
     const handleEdit = () => {
         setEditData({ ...profileData });
         setIsEditing(true);
+        setError("");
+        setSuccess("");
     };
 
     const handleSave = () => {
@@ -47,7 +51,7 @@ const Profile = () => {
     return (
         <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display'] relative">
             {/* Navbar */}
-            <Navbar logo={logo} user="Student" className="fixed top-0 left-0 w-full z-10 shadow-md" />
+            <Navbar logo={logo} user={studentData.name} className="fixed top-0 left-0 w-full z-10 shadow-md" />
 
             {/* Main Content */}
             <main className="flex flex-col flex-1 px-4 sm:px-6 py-24 sm:py-28 w-full max-w-4xl mx-auto">
@@ -58,9 +62,26 @@ const Profile = () => {
                         className="inline-flex items-center space-x-2 text-[#a30c34] hover:text-[#8b092d] transition-colors duration-200"
                     >
                         <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-sm font-medium">Back</span>
+                        <span className="text-sm font-medium">Back to Dashboard</span>
                     </Link>
                 </div>
+
+                {/* Success/Error Messages */}
+                {success && (
+                    <div className="mb-4 w-full bg-green-50 border border-green-200 rounded-lg p-4">
+                        <p className="text-green-800 text-center font-medium">
+                            {success}
+                        </p>
+                    </div>
+                )}
+
+                {error && (
+                    <div className="mb-4 w-full bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p className="text-red-800 text-center font-medium">
+                            {error}
+                        </p>
+                    </div>
+                )}
 
                 {/* Profile Card */}
                 <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 w-full">
@@ -79,10 +100,20 @@ const Profile = () => {
                             <div className="flex items-center space-x-2 w-full sm:w-auto">
                                 <button
                                     onClick={handleSave}
-                                    className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 flex-1 sm:flex-none sm:px-4"
+                                    disabled={loading}
+                                    className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-3 py-2 rounded-lg transition-colors duration-200 flex-1 sm:flex-none sm:px-4"
                                 >
-                                    <Save className="w-4 h-4" />
-                                    <span className="text-sm font-medium">Save</span>
+                                    {loading ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save className="w-4 h-4" />
+                                            <span className="text-sm font-medium">Save</span>
+                                        </>
+                                    )}
                                 </button>
                                 <button
                                     onClick={handleCancel}
@@ -119,7 +150,7 @@ const Profile = () => {
                                 )}
                             </h2>
                             <p className="text-gray-600 text-sm sm:text-base mb-1">Student</p>
-                            <p className="text-xs sm:text-sm text-gray-500">Enrollment ID: {profileData.enrollmentId}</p>
+                            <p className="text-xs sm:text-sm text-gray-500">Enrollment ID: {profileData.enrollment_no}</p>
                         </div>
                     </div>
 
@@ -154,29 +185,12 @@ const Profile = () => {
                                         {isEditing ? (
                                             <input
                                                 type="tel"
-                                                value={editData.phone}
-                                                onChange={(e) => handleInputChange('phone', e.target.value)}
+                                                value={editData.phone_no}
+                                                onChange={(e) => handleInputChange('phone_no', e.target.value)}
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-sm"
                                             />
                                         ) : (
-                                            <p className="text-sm sm:text-base text-gray-800">{profileData.phone}</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start space-x-3">
-                                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
-                                    <div className="flex-1 min-w-0">
-                                        <label className="text-xs sm:text-sm text-gray-600 block mb-1">Department</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={editData.department}
-                                                onChange={(e) => handleInputChange('department', e.target.value)}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-sm"
-                                            />
-                                        ) : (
-                                            <p className="text-sm sm:text-base text-gray-800">{profileData.department}</p>
+                                            <p className="text-sm sm:text-base text-gray-800">{profileData.phone_no}</p>
                                         )}
                                     </div>
                                 </div>
@@ -189,19 +203,10 @@ const Profile = () => {
                             
                             <div className="space-y-3">
                                 <div className="flex items-start space-x-3">
-                                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
+                                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
-                                        <label className="text-xs sm:text-sm text-gray-600 block mb-1">Year of Study</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={editData.year}
-                                                onChange={(e) => handleInputChange('year', e.target.value)}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-sm"
-                                            />
-                                        ) : (
-                                            <p className="text-sm sm:text-base text-gray-800">{profileData.year}</p>
-                                        )}
+                                        <label className="text-xs sm:text-sm text-gray-600 block mb-1">Enrollment Number</label>
+                                        <p className="text-sm sm:text-base text-gray-800">{profileData.enrollment_no}</p>
                                     </div>
                                 </div>
 
@@ -209,15 +214,17 @@ const Profile = () => {
                                     <Package className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
                                         <label className="text-xs sm:text-sm text-gray-600 block mb-1">Bag Number</label>
-                                        <p className="text-sm sm:text-base text-gray-800">{profileData.bagNumber}</p>
+                                        <p className="text-sm sm:text-base text-gray-800">{profileData.bag_no}</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start space-x-3">
                                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
-                                        <label className="text-xs sm:text-sm text-gray-600 block mb-1">Join Date</label>
-                                        <p className="text-sm sm:text-base text-gray-800">{profileData.joinDate}</p>
+                                        <label className="text-xs sm:text-sm text-gray-600 block mb-1">Member Since</label>
+                                        <p className="text-sm sm:text-base text-gray-800">
+                                            {profileData.created_at ? new Date(profileData.created_at).toLocaleDateString() : 'N/A'}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -225,30 +232,38 @@ const Profile = () => {
 
                         {/* Hostel Information */}
                         <div className="space-y-4">
-                            <h3 className="text-base sm:text-lg font-semibold text-[#333] border-b border-gray-200 pb-2">Hostel Information</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-[#333] border-b border-gray-200 pb-2">Residency Information</h3>
                             <div className="flex items-start space-x-3">
                                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                    <label className="text-xs sm:text-sm text-gray-600 block mb-1">Hostel & Room</label>
+                                    <label className="text-xs sm:text-sm text-gray-600 block mb-1">Residency Number</label>
                                     {isEditing ? (
                                         <input
                                             type="text"
-                                            value={editData.hostel}
-                                            onChange={(e) => handleInputChange('hostel', e.target.value)}
+                                            value={editData.residency_no}
+                                            onChange={(e) => handleInputChange('residency_no', e.target.value)}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-sm"
                                         />
                                     ) : (
-                                        <p className="text-sm sm:text-base text-gray-800">{profileData.hostel}</p>
+                                        <p className="text-sm sm:text-base text-gray-800">{profileData.residency_no}</p>
                                     )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Logout Button */}
+                <button
+                    onClick={handleLogout}
+                    className="mt-6 px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition self-center"
+                >
+                    Logout
+                </button>
             </main>
 
             {/* Footer */}
-            <Footer />
+            <Footer className="fixed bottom-0 left-0 w-full z-10 shadow-md" />
         </div>
     );
 };

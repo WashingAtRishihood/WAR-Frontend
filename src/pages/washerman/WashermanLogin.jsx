@@ -4,17 +4,52 @@ import logo from "../../assets/rishihood-logo.webp";
 
 function WashermanLogin() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleLogin = () => {
-        // Common credentials for all washermen
-        if (email === "1" && password === "1") {
-            setError("");
-            navigate("/washerman/dashboard");
-        } else {
-            setError("Invalid credentials. Please try again.");
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        
+        if (!username || !password) {
+            setError("Please fill in all fields");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/auth/washerman/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Store washerman data in localStorage for future use
+                localStorage.setItem('washermanData', JSON.stringify(data.washerman));
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userType', 'washerman');
+                
+                // Navigate to dashboard
+                navigate("/washerman/dashboard");
+            } else {
+                setError(data.error || "Login failed. Please check your credentials.");
+            }
+        } catch (error) {
+            setError("Network error. Please try again.");
+            console.error('Login error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -32,16 +67,17 @@ function WashermanLogin() {
             {/* Main Section */}
             <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
                 <h1 className="text-2xl sm:text-3xl font-semibold text-[#333] mb-8">
-                    Login
+                    Washerman Login
                 </h1>
 
-                <form className="flex flex-col gap-5 w-full max-w-sm">
+                <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full max-w-sm">
                     <input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        placeholder="Enter your username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
+                        required
                     />
                     <input
                         type="password"
@@ -49,6 +85,7 @@ function WashermanLogin() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
+                        required
                     />
                     
                     {/* Error Message */}
@@ -59,13 +96,24 @@ function WashermanLogin() {
                     )}
                     
                     <button
-                        type="button"
-                        onClick={handleLogin}
-                        className="mt-4 bg-[#a30c34] hover:bg-[#8b092d] text-white font-medium py-3 rounded-lg transition text-lg"
+                        type="submit"
+                        disabled={loading}
+                        className="mt-4 bg-[#a30c34] hover:bg-[#8b092d] disabled:bg-gray-400 text-white font-medium py-3 rounded-lg transition text-lg flex items-center justify-center"
                     >
-                        Continue
+                        {loading ? (
+                            <>
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                Logging in...
+                            </>
+                        ) : (
+                            "Continue"
+                        )}
                     </button>
                 </form>
+
+                <div className="mt-6 text-gray-600 text-sm">
+                    <p>Contact admin to get your username and password</p>
+                </div>
             </main>
         </div>
     );
