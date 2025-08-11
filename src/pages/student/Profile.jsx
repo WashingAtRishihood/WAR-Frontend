@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { User, Mail, Phone, BookOpen, Calendar, MapPin, Edit, Save, X, ArrowLeft, Package, Camera } from "lucide-react";
+import { User, Mail, Phone, BookOpen, Calendar, MapPin, Edit, Save, X, ArrowLeft, Package } from "lucide-react";
 import logo from "../../assets/rishihood-logo.webp";
 
 const Profile = () => {
@@ -16,30 +16,25 @@ const Profile = () => {
         department: "Computer Science",
         year: "2nd Year",
         hostel: "Residency 1, Room 246",
-        joinDate: "August 2025",
-        profilePicture: null
+        joinDate: "August 2025"
     });
 
     const [editData, setEditData] = useState({ ...profileData });
-    const [previewImage, setPreviewImage] = useState(null);
 
     const handleEdit = () => {
         setEditData({ ...profileData });
-        setPreviewImage(profileData.profilePicture);
         setIsEditing(true);
     };
 
     const handleSave = () => {
-        setProfileData({ ...editData, profilePicture: previewImage });
+        setProfileData({ ...editData });
         setIsEditing(false);
-        setPreviewImage(null);
         // Here you can add API call to update profile
     };
 
     const handleCancel = () => {
         setEditData({ ...profileData });
         setIsEditing(false);
-        setPreviewImage(null);
     };
 
     const handleInputChange = (field, value) => {
@@ -47,17 +42,6 @@ const Profile = () => {
             ...prev,
             [field]: value
         }));
-    };
-
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setPreviewImage(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
     };
 
     return (
@@ -115,30 +99,10 @@ const Profile = () => {
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
                         <div className="relative">
                             <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden border-4 border-[#a30c34] flex items-center justify-center flex-shrink-0">
-                                {(isEditing ? previewImage : profileData.profilePicture) ? (
-                                    <img
-                                        src={isEditing ? previewImage : profileData.profilePicture}
-                                        alt="Profile"
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-r from-[#a30c34] to-[#d63384] flex items-center justify-center">
-                                        <User className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 text-white" />
-                                    </div>
-                                )}
+                                <div className="w-full h-full bg-gradient-to-r from-[#a30c34] to-[#d63384] flex items-center justify-center">
+                                    <User className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 text-white" />
+                                </div>
                             </div>
-                            
-                            {isEditing && (
-                                <label className="absolute bottom-0 right-0 bg-[#a30c34] text-white p-2 rounded-full cursor-pointer hover:bg-[#8b092d] transition-colors duration-200 shadow-lg">
-                                    <Camera className="w-4 h-4" />
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageUpload}
-                                        className="hidden"
-                                    />
-                                </label>
-                            )}
                         </div>
                         
                         <div className="text-center sm:text-left flex-1">

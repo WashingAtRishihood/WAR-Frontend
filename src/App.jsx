@@ -12,7 +12,6 @@ import WashermanDashboard from './pages/washerman/WashermanDashboard';
 import WashermanHome from './pages/washerman/Home';
 import WashermanReceived from './pages/washerman/Received';
 import WashermanReady from './pages/washerman/Ready';
-import AboutUs from './pages/AboutUs';
 
 function App() {
     return (
@@ -31,7 +30,6 @@ function App() {
                 <Route path="/washerman/home" element={<WashermanHome />} />
                 <Route path="/washerman/received" element={<WashermanReceived />} />
                 <Route path="/washerman/ready" element={<WashermanReady />} />
-                <Route path="/about-us" element={<AboutUs />} />
             </Routes>
         </Router>
     );
