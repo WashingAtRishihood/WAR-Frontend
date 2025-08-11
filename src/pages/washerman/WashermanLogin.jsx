@@ -10,7 +10,7 @@ function WashermanLogin() {
 
     const handleLogin = () => {
         // Common credentials for all washermen
-        if (email === "washerman@rishihood.edu.in" && password === "washerman123") {
+        if (email === "1" && password === "1") {
             setError("");
             navigate("/washerman/dashboard");
         } else {

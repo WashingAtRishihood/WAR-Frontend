@@ -3,9 +3,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
 
-const Incompleted = () => {
+const Incomplete = () => {
     // Mock data - will be replaced with backend data
-    const incompletedOrders = [
+    const incompleteOrders = [
         { id: 4, date: "2024-01-20", count: 4, status: "In Progress" },
         { id: 5, date: "2024-01-18", count: 6, status: "Pending" },
     ];
@@ -20,14 +20,14 @@ const Incompleted = () => {
                         Pending Orders
                     </h1>
 
-                    {incompletedOrders.length === 0 ? (
+                    {incompleteOrders.length === 0 ? (
                         <div className="text-center py-8">
                             <p className="text-gray-500 text-lg">No pending orders</p>
                             <p className="text-gray-400 text-sm mt-2">Your pending laundry orders will appear here</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {incompletedOrders.map((order) => (
+                            {incompleteOrders.map((order) => (
                                 <div key={order.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                                     <div className="flex justify-between items-center">
                                         <div>
@@ -51,4 +51,4 @@ const Incompleted = () => {
     );
 };
 
-export default Incompleted; 
+export default Incomplete; 

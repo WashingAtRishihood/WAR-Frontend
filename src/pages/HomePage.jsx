@@ -2,66 +2,63 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { GraduationCap, UserCheck } from "lucide-react";
 import logo from "../assets/rishihood-logo.webp";
+import { FaUserGraduate, FaTshirt } from "react-icons/fa";
 
 function HomePage() {
     const navigate = useNavigate();
 
+    const roles = [
+        {
+            title: "Student",
+            icon: FaUserGraduate,
+            gradient: "from-blue-100 to-blue-200",
+            textColor: "text-blue-900",
+            route: "/student/login",
+        },
+        {
+            title: "Washer Man",
+            icon: FaTshirt,
+            gradient: "from-yellow-100 to-yellow-200",
+            textColor: "text-yellow-900",
+            route: "/washerman/login",
+        },
+    ];
+
     return (
-        <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display']">
+    <div className="min-h-screen flex flex-col font-['Playfair_Display'] relative overflow-hidden bg-[#faf6f3]">
+
             {/* Header */}
-            <header className="p-6">
+            <header className="p-3.5 relative z-10">
                 <img
                     src={logo}
                     alt="Rishihood University Logo"
-                    className="w-28 sm:w-32 md:w-36 object-contain"
+                    className="w-28 sm:w-32 md:w-36 object-contain drop-shadow-lg"
                 />
             </header>
+            {/* Main */}
+            <main className="flex flex-col items-center justify-center flex-1 text-center px-4 relative z-10 w-full">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#333] mb-10">
+                    Hey there! Who’s logging in?
+                </h1>
 
-            {/* Main Section */}
-            <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
-                <div className="max-w-sm mx-auto">
-                    <h1 className="text-4xl sm:text-5xl font-bold text-[#333] mb-4">
-                        Welcome
-                    </h1>
-                    <p className="text-gray-600 text-lg mb-16">
-                        Choose your role to continue
-                    </p>
-
-                    <div className="space-y-6">
-                        <button
-                            onClick={() => navigate("/student/login")}
-                            className="w-full bg-white shadow-lg hover:shadow-xl border border-gray-200 hover:border-[#a30c34] rounded-2xl p-8 transition-all duration-300 transform hover:-translate-y-1"
-                        >
-                            <div className="flex flex-col items-center space-y-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-[#a30c34] to-[#d63384] rounded-2xl flex items-center justify-center shadow-md">
-                                    <GraduationCap className="w-8 h-8 text-white" />
-                                </div>
-                                <div className="text-center">
-                                    <h3 className="text-2xl font-bold text-[#333] mb-2">Student</h3>
-                                    <p className="text-gray-500 text-sm">Submit & track your laundry</p>
-                                </div>
+                <div className="flex flex-col sm:flex-row gap-8 w-full justify-center items-center">
+                    {roles.map((role) => {
+                        const Icon = role.icon;
+                        return (
+                            <div
+                                key={role.title}
+                                className={`flex flex-col items-center p-6 w-64 max-w-full rounded-2xl shadow-lg bg-gradient-to-br ${role.gradient} ${role.textColor} cursor-pointer transform hover:scale-105 hover:shadow-xl transition`}
+                                onClick={() => navigate(role.route)}
+                            >
+                                <Icon className="text-5xl mb-3" />
+                                <p className="font-medium text-lg md:text-xl">{role.title}</p>
                             </div>
-                        </button>
-
-                        <button
-                            onClick={() => navigate("/washerman/login")}
-                            className="w-full bg-white shadow-lg hover:shadow-xl border border-gray-200 hover:border-[#a30c34] rounded-2xl p-8 transition-all duration-300 transform hover:-translate-y-1"
-                        >
-                            <div className="flex flex-col items-center space-y-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-[#a30c34] to-[#d63384] rounded-2xl flex items-center justify-center shadow-md">
-                                    <UserCheck className="w-8 h-8 text-white" />
-                                </div>
-                                <div className="text-center">
-                                    <h3 className="text-2xl font-bold text-[#333] mb-2">Washer Man</h3>
-                                    <p className="text-gray-500 text-sm">Manage laundry orders</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
+                        );
+                    })}
                 </div>
             </main>
         </div>
     );
 }
 
-export default HomePage
+export default HomePage;

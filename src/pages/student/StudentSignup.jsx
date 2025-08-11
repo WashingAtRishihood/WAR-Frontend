@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, Send } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Send, Check } from "lucide-react";
 import logo from "../../assets/rishihood-logo.webp";
 
 function StudentSignup() {
@@ -48,7 +48,7 @@ function StudentSignup() {
     return (
         <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display']">
             {/* Header */}
-            <header className="p-4 sm:p-6">
+            <header className="p-3.5 sm:p-6">
                 <img
                     src={logo}
                     alt="Rishihood University Logo"
@@ -62,8 +62,8 @@ function StudentSignup() {
                     // Step 1: Email Verification & Password Setup
                     <>
                         <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#333] mb-6 sm:mb-8">
-                    Sign Up
-                </h1>
+                            Sign Up
+                        </h1>
                         <div className="w-full max-w-sm">
                             <form className="flex flex-col gap-4 sm:gap-5">
                                 {/* Email and OTP Section */}
@@ -71,9 +71,9 @@ function StudentSignup() {
                                     <div className="flex gap-2">
                                         <div className="flex-1 relative">
                                             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
+                                            <input
+                                                type="email"
+                                                placeholder="Enter your email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-base sm:text-lg"
@@ -105,7 +105,7 @@ function StudentSignup() {
                                                 disabled={!otp || emailVerified}
                                                 className="px-4 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium rounded-md transition text-sm sm:text-base"
                                             >
-                                                {emailVerified ? "✓" : "Verify"}
+                                                {emailVerified ? <Check className="w-4 h-4 inline-block mr-1" /> : <Send className="w-4 h-4 inline-block mr-1" />} {emailVerified ? "Verified" : "Verify"}
                                             </button>
                                         </div>
                                     )}
@@ -172,29 +172,29 @@ function StudentSignup() {
                         </div>
                         <div className="w-full max-w-sm">
                             <form className="flex flex-col gap-4 sm:gap-5">
-                    <input
-                        type="tel"
-                        placeholder="Enter your phone number"
+                                <input
+                                    type="tel"
+                                    placeholder="Enter your phone number"
                                     className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-base sm:text-lg"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter your enrollment ID"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Enter your enrollment ID"
                                     className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-base sm:text-lg"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter your bag number"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Enter your bag number"
                                     className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-base sm:text-lg"
-                    />
-                    <button
-                        type="submit"
+                                />
+                                <button
+                                    type="submit"
                                     onClick={handleCompleteSignUp}
                                     className="mt-4 bg-[#a30c34] hover:bg-[#8b092d] text-white font-medium py-3 rounded-lg transition text-base sm:text-lg"
-                    >
+                                >
                                     Complete Sign Up
-                    </button>
-                </form>
+                                </button>
+                            </form>
                         </div>
                     </>
                 )}

@@ -14,11 +14,14 @@ function Navbar() {
     const getServiceStatus = () => {
         const now = new Date();
         const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
         const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
-        // Service hours: Monday to Friday, 8 AM to 6 PM
+        // Service hours: Monday to Friday, 8:30 AM to 6:00 PM
         const isWeekday = currentDay >= 1 && currentDay <= 5;
-        const isServiceHours = currentHour >= 8 && currentHour < 18;
+        const afterStart = currentHour > 8 || (currentHour === 8 && currentMinute >= 30);
+        const beforeEnd = currentHour < 18;
+        const isServiceHours = afterStart && beforeEnd;
 
         return {
             isOpen: isWeekday && isServiceHours,
@@ -69,14 +72,13 @@ function Navbar() {
                     className="w-24 sm:w-28 md:w-32 object-contain"
                 />
 
-
                 {/* Center: Dashboard Navigation - Desktop Only */}
                 <div className="hidden lg:flex items-center space-x-6 text-gray-700 absolute left-1/2 transform -translate-x-1/2">
                     <Link
-                        to="/student/completed"
+                        to="/student/incomplete"
                         className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
                     >
-                        Completed
+                        Incomplete
                     </Link>
                     <Link
                         to="/student/dashboard"
@@ -85,20 +87,15 @@ function Navbar() {
                         Dashboard
                     </Link>
                     <Link
-                        to="/student/incompleted"
+                        to="/student/completed"
                         className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
                     >
-                        Incompleted
+                        Completed
                     </Link>
                 </div>
 
-                {/* Right: Notifications, Service Hours & Profile */}
+                {/* Right: Service Hours & Profile */}
                 <div className="flex items-center space-x-3 sm:space-x-4 relative flex-shrink-0">
-                    {/* 🔔 Notification Icon */}
-                    <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 group">
-                        <Bell className="w-5 h-5 text-gray-600 group-hover:text-[#a30c34]" />
-                    </button>
-
                     {/* 🕐 Service Hours Indicator - Desktop Only */}
                     <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-full bg-white border border-gray-200 shadow-sm relative group">
                         <Clock className="w-4 h-4 text-gray-600" />
@@ -114,7 +111,7 @@ function Navbar() {
                             <div className="text-center">
                                 <div className="font-semibold mb-1">Laundry Hours</div>
                                 <div>Monday - Saturday</div>
-                                <div>8:00 AM - 6:00 PM</div>
+                                <div>8:30 AM - 6:00 PM</div>
                                 <div className="text-gray-300 text-xs mt-1">Closed on Sundays</div>
                             </div>
                             {/* Arrow */}
@@ -212,8 +209,8 @@ function Navbar() {
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-200">
                             <div>
-                                <h3 className="font-semibold text-gray-800 text-lg">Laundry Service</h3>
-                                <p className="text-xs text-gray-500">Rishihood University</p>
+                                <h3 className="font-semibold text-gray-800 text-lg">Rishihood University</h3>
+                                <p className="text-xs text-gray-500">Laundry Service</p>
                             </div>
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
