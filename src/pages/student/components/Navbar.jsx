@@ -66,21 +66,19 @@ function Navbar() {
         <>
             <nav className="fixed top-0 left-0 w-full bg-[#faf6f3] shadow-md px-4 sm:px-6 py-3 flex items-center justify-between font-medium z-50">
                 {/* Left: Logo */}
-                <button className="flex items-center focus:outline-none" onClick={() => window.location.reload()}>
-                    <img
-                        src={logo}
-                        alt="Rishihood Logo"
-                        className="w-24 sm:w-28 md:w-32 object-contain"
-                    />
-                </button>
+                <img
+                    src={logo}
+                    alt="Rishihood Logo"
+                    className="w-24 sm:w-28 md:w-32 object-contain"
+                />
 
                 {/* Center: Dashboard Navigation - Desktop Only */}
                 <div className="hidden lg:flex items-center space-x-6 text-gray-700 absolute left-1/2 transform -translate-x-1/2">
                     <Link
-                        to="/student/completed"
+                        to="/student/incomplete"
                         className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
                     >
-                        Completed
+                        Incomplete
                     </Link>
                     <Link
                         to="/student/dashboard"
@@ -89,20 +87,15 @@ function Navbar() {
                         Dashboard
                     </Link>
                     <Link
-                        to="/student/incompleted"
+                        to="/student/completed"
                         className="hover:text-[#a30c34] transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 text-sm font-medium"
                     >
-                        Incompleted
+                        Completed
                     </Link>
                 </div>
 
-                {/* Right: Notifications, Service Hours & Profile */}
+                {/* Right: Service Hours & Profile */}
                 <div className="flex items-center space-x-3 sm:space-x-4 relative flex-shrink-0">
-                    {/* 🔔 Notification Icon */}
-                    <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 group">
-                        <Bell className="w-5 h-5 text-gray-600 group-hover:text-[#a30c34]" />
-                    </button>
-
                     {/* 🕐 Service Hours Indicator - Desktop Only */}
                     <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-full bg-white border border-gray-200 shadow-sm relative group">
                         <Clock className="w-4 h-4 text-gray-600" />

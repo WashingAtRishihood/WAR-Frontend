@@ -1,245 +1,131 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { FaTshirt, FaCalendarAlt } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import logo from "../../assets/rishihood-logo.webp";
 
 function WashermanDashboard() {
-    const navigate = useNavigate();
-    const [washermanData, setWashermanData] = useState(null);
-    const [dashboardData, setDashboardData] = useState(null);
-    const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+  const [selectedTab, setSelectedTab] = useState("B");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [bagStatus, setBagStatus] = useState({});
 
-    useEffect(() => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userType = localStorage.getItem('userType');
-        const washermanDataStr = localStorage.getItem('washermanData');
-        
-        if (!isLoggedIn || userType !== 'washerman' || !washermanDataStr) {
-            navigate('/washerman/login');
-            return;
-        }
+  const bagsData = [
+    { id: 1, bagNo: "B-232", clothes: 6, date: "27/07/2025" },
+    { id: 2, bagNo: "G-354", clothes: 3, date: "21/07/2025" },
+    { id: 3, bagNo: "G-121", clothes: 7, date: "8/07/2025" },
+    { id: 5, bagNo: "B-229", clothes: 12, date: "29/08/2025" },
+    { id: 6, bagNo: "G-423", clothes: 5, date: "9/07/2025" },
+    { id: 7, bagNo: "B-675", clothes: 10, date: "19/08/2025" },
+    { id: 8, bagNo: "G-129", clothes: 8, date: "9/06/2025" },
+  ];
 
-        try {
-            const washerman = JSON.parse(washermanDataStr);
-            setWashermanData(washerman);
-            fetchDashboardData();
-            fetchOrders();
-        } catch (error) {
-            console.error('Error parsing washerman data:', error);
-            navigate('/washerman/login');
-        }
-    }, [navigate]);
+  const handleReceived = (id) => {
+    setBagStatus((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], received: true },
+    }));
+  };
 
-    const fetchDashboardData = async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/washerman/dashboard/');
-            if (response.ok) {
-                const data = await response.json();
-                setDashboardData(data);
-            } else {
-                setError("Failed to fetch dashboard data");
-            }
-        } catch (error) {
-            setError("Network error while fetching dashboard data");
-            console.error('Dashboard fetch error:', error);
-        }
-    };
+  const handleReady = (id) => {
+    setBagStatus((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], ready: true },
+    }));
+  };
 
-    const fetchOrders = async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/orders/all/');
-            if (response.ok) {
-                const data = await response.json();
-                setOrders(data);
-            } else {
-                setError("Failed to fetch orders");
-            }
-        } catch (error) {
-            setError("Network error while fetching orders");
-            console.error('Orders fetch error:', error);
-        }
-    };
+  const filteredBags = bagsData.filter((bag) => {
+    const matchesTab = bag.bagNo.startsWith(selectedTab);
+    const matchesSearch = bag.bagNo.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesTab && matchesSearch;
+  });
 
-    const updateOrderStatus = async (orderId, newStatus) => {
-        setLoading(true);
-        setError("");
+  return (
+    <div className="min-h-screen bg-[#faf6f3] pt-20">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6 font-['Playfair_Display']">
+        <h1 className="text-3xl font-bold text-center mb-6">Students Bags</h1>
 
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/api/orders/${orderId}/status/`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    status: newStatus
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Refresh data
-                fetchDashboardData();
-                fetchOrders();
-            } else {
-                setError(data.error || "Failed to update order status");
-            }
-        } catch (error) {
-            setError("Network error. Please try again.");
-            console.error('Status update error:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('washermanData');
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('userType');
-        navigate('/home');
-    };
-
-    if (!washermanData) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#faf6f3]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a30c34]"></div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display'] relative">
-            {/* Navbar */}
-            <Navbar logo={logo} user={washermanData.username} className="fixed top-0 left-0 w-full z-10 shadow-md" />
-
-            {/* Main Content */}
-            <main className="flex flex-col items-center flex-1 px-3 sm:px-6 py-28 sm:py-32 w-full max-w-4xl mx-auto">
-                {/* Welcome Section */}
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 w-full text-center">
-                    <h2 className="text-2xl font-bold text-[#333] mb-2">
-                        Welcome, {washermanData.username}!
-                    </h2>
-                    <p className="text-gray-600">Washerman Dashboard</p>
-                </div>
-
-                {/* Dashboard Stats */}
-                {dashboardData && (
-                    <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 w-full">
-                        <h3 className="text-xl font-bold text-[#333] mb-4 text-center">Order Overview</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                            <div className="bg-blue-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-blue-600">{dashboardData.total_orders}</p>
-                                <p className="text-sm text-blue-800">Total Orders</p>
-                            </div>
-                            <div className="bg-yellow-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-yellow-600">{dashboardData.pending_orders}</p>
-                                <p className="text-sm text-yellow-800">Pending</p>
-                            </div>
-                            <div className="bg-orange-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-orange-600">{dashboardData.inprogress_orders}</p>
-                                <p className="text-sm text-orange-800">In Progress</p>
-                            </div>
-                            <div className="bg-green-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-green-600">{dashboardData.complete_orders}</p>
-                                <p className="text-sm text-green-800">Completed</p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Orders Section */}
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 w-full">
-                    <h3 className="text-xl font-bold text-[#333] mb-6 text-center">Manage Orders</h3>
-
-                    {/* Error Message */}
-                    {error && (
-                        <div className="mb-6 w-full bg-red-50 border border-red-200 rounded-lg p-4">
-                            <p className="text-red-800 text-center font-medium">
-                                {error}
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Orders Table */}
-                    <div className="overflow-x-auto">
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr className="bg-gray-50">
-                                    <th className="border border-gray-300 px-4 py-2 text-left">Order ID</th>
-                                    <th className="border border-gray-300 px-4 py-2 text-left">Bag Number</th>
-                                    <th className="border border-gray-300 px-4 py-2 text-left">Clothes Count</th>
-                                    <th className="border border-gray-300 px-4 py-2 text-left">Submission Date</th>
-                                    <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-                                    <th className="border border-gray-300 px-4 py-2 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {orders.map((order) => (
-                                    <tr key={order.id} className="hover:bg-gray-50">
-                                        <td className="border border-gray-300 px-4 py-2">#{order.id}</td>
-                                        <td className="border border-gray-300 px-4 py-2 font-medium">{order.bag_no}</td>
-                                        <td className="border border-gray-300 px-4 py-2">{order.number_of_clothes}</td>
-                                        <td className="border border-gray-300 px-4 py-2">
-                                            {new Date(order.submission_date).toLocaleDateString()}
-                                        </td>
-                                        <td className="border border-gray-300 px-4 py-2">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                order.status === 'inprogress' ? 'bg-orange-100 text-orange-800' :
-                                                'bg-green-100 text-green-800'
-                                            }`}>
-                                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                                            </span>
-                                        </td>
-                                        <td className="border border-gray-300 px-4 py-2">
-                                            {order.status === 'pending' && (
-                                                <button
-                                                    onClick={() => updateOrderStatus(order.id, 'inprogress')}
-                                                    disabled={loading}
-                                                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm disabled:bg-gray-400"
-                                                >
-                                                    Received
-                                                </button>
-                                            )}
-                                            {order.status === 'inprogress' && (
-                                                <button
-                                                    onClick={() => updateOrderStatus(order.id, 'complete')}
-                                                    disabled={loading}
-                                                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm disabled:bg-gray-400"
-                                                >
-                                                    Ready
-                                                </button>
-                                            )}
-                                            {order.status === 'complete' && (
-                                                <span className="text-green-600 text-sm font-medium">✓ Completed</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {orders.length === 0 && (
-                        <div className="text-center py-8 text-gray-500">
-                            No orders found
-                        </div>
-                    )}
-                </div>
-
-                {/* Logout Button */}
-                <button
-                    onClick={handleLogout}
-                    className="mt-6 px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition"
-                >
-                    Logout
-                </button>
-            </main>
+        {/* Tabs + Search */}
+        <div className="flex items-center gap-4 mb-6">
+          <div className="flex border rounded-lg overflow-hidden">
+            <button
+              className={`px-4 py-2 font-semibold ${selectedTab === "B" ? "bg-[#a30c34] text-white" : "bg-white"
+                }`}
+              onClick={() => setSelectedTab("B")}
+            >
+              B
+            </button>
+            <button
+              className={`px-4 py-2 font-semibold ${selectedTab === "G" ? "bg-[#a30c34] text-white" : "bg-white"
+                }`}
+              onClick={() => setSelectedTab("G")}
+            >
+              G
+            </button>
+          </div>
+          <input
+            type="text"
+            placeholder="🔍 Bag Number"
+            className="flex-1 border rounded-lg px-4 py-2"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-    );
+
+        {/* Bag Cards */}
+        <div className="space-y-4">
+          {filteredBags.map((bag) => {
+            const status = bagStatus[bag.id] || {};
+            return (
+              <div
+                key={bag.id}
+                className="flex justify-between items-center bg-[#fff9f0] shadow-sm rounded-xl p-4 border transition-transform transform hover:scale-[1.02] hover:shadow-md"
+              >
+                <div>
+                  <p className="font-semibold text-lg">
+                    Bag No: <span className="text-red-700">{bag.bagNo}</span>
+                  </p>
+                  <p className="text-gray-700 flex items-center gap-2">
+                    <FaTshirt className="text-gray-500" /> Clothes: {bag.clothes}
+                  </p>
+                  <p className="text-gray-700 flex items-center gap-2">
+                    <FaCalendarAlt className="text-gray-500" /> Date:{" "}
+                    <span className="text-red-600">{bag.date}</span>
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2">
+                  {!status.received && (
+                    <button
+                      className="bg-green-600 text-white px-4 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-green-700 text-sm sm:text-base"
+                      onClick={() => handleReceived(bag.id)}
+                    >
+                      Mark as Received
+                    </button>
+                  )}
+                  {status.received && !status.ready && (
+                    <button
+                      className="bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-blue-700 text-xs sm:text-base"
+                      onClick={() => handleReady(bag.id)}
+                    >
+                      Mark as Ready
+                    </button>
+                  )}
+                  {status.ready && (
+                    <span className="text-green-700 font-semibold">Ready</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          {filteredBags.length === 0 && (
+            <p className="text-center text-gray-500">No bags found.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default WashermanDashboard;
