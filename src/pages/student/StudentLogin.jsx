@@ -8,11 +8,11 @@ function StudentLogin() {
     return (
         <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display']">
             {/* Header */}
-            <header className="p-6">
+            <header className="p-3.5 relative z-10">
                 <img
                     src={logo}
                     alt="Rishihood University Logo"
-                    className="w-28 sm:w-32 md:w-36 object-contain"
+                    className="w-28 sm:w-32 md:w-36 object-contain drop-shadow-lg"
                 />
             </header>
 
