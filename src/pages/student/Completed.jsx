@@ -15,7 +15,7 @@ const Completed = () => {
         // Check if user is logged in
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const studentDataStr = localStorage.getItem('studentData');
-        
+
         if (!isLoggedIn || !studentDataStr) {
             navigate('/student/login');
             return;
@@ -69,15 +69,8 @@ const Completed = () => {
         <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display'] relative">
             <Navbar logo={logo} user={studentData.name} className="fixed top-0 left-0 w-full z-10 shadow-md" />
 
-            <main className="flex flex-col flex-1 px-4 sm:px-6 py-24 sm:py-28 w-full max-w-4xl mx-auto">
-                {/* Header Section */}
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 text-center">
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#333] mb-2">
-                        Completed Orders
-                    </h1>
-                    <p className="text-gray-600">Bag Number: {studentData.bag_no}</p>
-                    <p className="text-gray-600">Enrollment: {studentData.enrollment_no}</p>
-                </div>
+            <main className="flex flex-col flex-1 px-4 sm:px-6 py-24 sm:py-28 w-full max-w-2xl mx-auto">
+                <h1 className="text-2xl sm:text-3xl font-bold text-[#a30c34] mb-8 text-center">Completed Orders</h1>
 
                 {/* Orders Section */}
                 <div className="bg-white rounded-xl shadow-md p-6 sm:p-8">
@@ -140,14 +133,6 @@ const Completed = () => {
                         </>
                     )}
                 </div>
-
-                {/* Logout Button */}
-                <button
-                    onClick={handleLogout}
-                    className="mt-6 px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition self-center"
-                >
-                    Logout
-                </button>
             </main>
 
             <Footer className="fixed bottom-0 left-0 w-full z-10 shadow-md" />

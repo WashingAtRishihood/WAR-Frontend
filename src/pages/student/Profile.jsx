@@ -12,14 +12,18 @@ const Profile = () => {
     const [profileData, setProfileData] = useState({
         name: "Ritesh Kumar",
         email: "ritesh.kumar2024@nst.rishihood.edu.in",
-        phone: "+91 98765 43210",
-        enrollmentId: "2401010384",
-        bagNumber: "B-558",
+        phone_no: "+91 98765 43210",
+        enrollment_no: "2401010384",
+        bag_no: "B-558",
         department: "Computer Science",
         year: "2nd Year",
-        hostel: "Residency 1, Room 246",
-        joinDate: "August 2025"
+        residency_no: "Residency 1, Room 246",
+        created_at: "2025-08-01"
     });
+    // Add error/success/loading states
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [editData, setEditData] = useState({ ...profileData });
 
@@ -48,10 +52,18 @@ const Profile = () => {
         }));
     };
 
+    // Add missing handleLogout function
+    const handleLogout = () => {
+        localStorage.removeItem('studentData');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userType');
+        navigate('/home');
+    };
+
     return (
         <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display'] relative">
             {/* Navbar */}
-            <Navbar logo={logo} user={studentData.name} className="fixed top-0 left-0 w-full z-10 shadow-md" />
+            <Navbar logo={logo} user={studentData?.name || profileData.name} className="fixed top-0 left-0 w-full z-10 shadow-md" />
 
             {/* Main Content */}
             <main className="flex flex-col flex-1 px-4 sm:px-6 py-24 sm:py-28 w-full max-w-4xl mx-auto">
@@ -62,7 +74,7 @@ const Profile = () => {
                         className="inline-flex items-center space-x-2 text-[#a30c34] hover:text-[#8b092d] transition-colors duration-200"
                     >
                         <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-sm font-medium">Back to Dashboard</span>
+                        <span className="text-sm font-medium">Back</span>
                     </Link>
                 </div>
 
@@ -135,7 +147,7 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="text-center sm:text-left flex-1">
                             <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#333] mb-1 sm:mb-2">
                                 {isEditing ? (
@@ -159,7 +171,7 @@ const Profile = () => {
                         {/* Personal Information */}
                         <div className="space-y-4">
                             <h3 className="text-base sm:text-lg font-semibold text-[#333] border-b border-gray-200 pb-2">Personal Information</h3>
-                            
+
                             <div className="space-y-3">
                                 <div className="flex items-start space-x-3">
                                     <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
@@ -200,7 +212,7 @@ const Profile = () => {
                         {/* Academic Information */}
                         <div className="space-y-4">
                             <h3 className="text-base sm:text-lg font-semibold text-[#333] border-b border-gray-200 pb-2">Academic Information</h3>
-                            
+
                             <div className="space-y-3">
                                 <div className="flex items-start space-x-3">
                                     <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
@@ -236,16 +248,16 @@ const Profile = () => {
                             <div className="flex items-start space-x-3">
                                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 mt-1 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                    <label className="text-xs sm:text-sm text-gray-600 block mb-1">Residency Number</label>
+                                    <label className="text-xs sm:text-sm text-gray-600 block mb-1">Residency</label>
                                     {isEditing ? (
                                         <input
                                             type="text"
-                                            value={editData.residency_no}
+                                            value={editData.residency_no?.split(',')[0] || ''}
                                             onChange={(e) => handleInputChange('residency_no', e.target.value)}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-sm"
                                         />
                                     ) : (
-                                        <p className="text-sm sm:text-base text-gray-800">{profileData.residency_no}</p>
+                                        <p className="text-sm sm:text-base text-gray-800">{profileData.residency_no?.split(',')[0]}</p>
                                     )}
                                 </div>
                             </div>
@@ -253,13 +265,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Logout Button */}
-                <button
-                    onClick={handleLogout}
-                    className="mt-6 px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition self-center"
-                >
-                    Logout
-                </button>
+                {/* Logout Button removed */}
             </main>
 
             {/* Footer */}

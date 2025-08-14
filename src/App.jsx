@@ -7,6 +7,7 @@ import StudentDashboard from './pages/student/Dashboard';
 import StudentProfile from './pages/student/Profile';
 import Completed from './pages/student/Completed';
 import Incomplete from './pages/student/Incomplete';
+import Orders from './pages/student/Orders';
 import WashermanLogin from './pages/washerman/WashermanLogin';
 import WashermanDashboard from './pages/washerman/WashermanDashboard';
 import Stats from './pages/washerman/Stats';
@@ -28,7 +29,7 @@ function App() {
                 <Route path="/washerman/dashboard" element={<WashermanDashboard />} />
                 <Route path="/washerman/stats" element={<Stats />} />
                 <Route path="/washerman/student-lookup" element={<StudentLookup />} />
-
+                <Route path="/student/orders" element={<Orders />} />
             </Routes>
         </Router>
     );

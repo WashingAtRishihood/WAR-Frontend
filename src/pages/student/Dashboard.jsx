@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
 
 const Dashboard = () => {
+    const [showOrdersModal, setShowOrdersModal] = useState(false);
     const navigate = useNavigate();
     const [selectedCount, setSelectedCount] = useState(null);
     const [customCount, setCustomCount] = useState("");
@@ -18,7 +19,7 @@ const Dashboard = () => {
         // Check if user is logged in
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const studentDataStr = localStorage.getItem('studentData');
-        
+
         if (!isLoggedIn || !studentDataStr) {
             navigate('/student/login');
             return;
@@ -52,7 +53,7 @@ const Dashboard = () => {
     const handleConfirm = async () => {
         const count = selectedCount || Number(customCount);
         if (!count || count <= 0) return;
-        
+
         if (!studentData) {
             setError("Student data not found. Please login again.");
             return;
@@ -79,11 +80,11 @@ const Dashboard = () => {
                 // Reset form
                 setSelectedCount(null);
                 setCustomCount("");
-                
+
                 // Show success message
                 setShowSuccess(true);
                 setTimeout(() => setShowSuccess(false), 3000);
-                
+
                 // Refresh dashboard data
                 fetchDashboardData(studentData.bag_no);
             } else {
@@ -123,36 +124,81 @@ const Dashboard = () => {
             <Navbar logo={logo} user={studentData.name} className="fixed top-0 left-0 w-full z-10 shadow-md" />
 
             {/* Main Content */}
-            <main className="flex flex-col items-center flex-1 px-3 sm:px-6 py-28 sm:py-32 w-full max-w-2xl mx-auto">
-                {/* Welcome Section */}
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 w-full text-center">
-                    <h2 className="text-2xl font-bold text-[#333] mb-2">
-                        Welcome, {studentData.name}!
-                    </h2>
-                    <p className="text-gray-600">Bag Number: {studentData.bag_no}</p>
-                    <p className="text-gray-600">Enrollment: {studentData.enrollment_no}</p>
-                </div>
+            <main className="flex flex-col items-center flex-1 px-3 sm:px-6 py-28 sm:py-32 w-full max-w-2xl mx-auto relative">
+                {/* View Orders Button */}
+                {/* View Orders button only for large screens */}
+                <button
+                    className="hidden sm:block fixed right-8 top-28 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md text-base font-semibold z-30"
+                    style={{maxWidth: '140px'}}
+                    onClick={() => setShowOrdersModal(true)}
+                >
+                    View Orders
+                </button>
+                {/* Welcome Section removed as info is now in Navbar */}
 
-                {/* Dashboard Stats */}
-                {dashboardData && (
-                    <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 w-full">
-                        <h3 className="text-xl font-bold text-[#333] mb-4 text-center">Your Orders</h3>
-                        <div className="grid grid-cols-2 gap-4 text-center">
-                            <div className="bg-blue-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-blue-600">{dashboardData.total_orders}</p>
-                                <p className="text-sm text-blue-800">Total Orders</p>
+                {/* Orders Modal */}
+                {showOrdersModal && dashboardData && (
+                    <div>
+                        {/* Modal for large screens */}
+                        <div className="hidden sm:flex fixed inset-0 z-40 items-center justify-center" style={{backdropFilter: 'blur(8px)', background: 'rgba(255,255,255,0.35)'}}>
+                            <div className="bg-white rounded-2xl shadow-2xl p-10 w-[92vw] max-w-md relative border border-gray-200 flex flex-col items-center animate-fadeIn">
+                                <button
+                                    className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold"
+                                    onClick={() => setShowOrdersModal(false)}
+                                    aria-label="Close"
+                                >
+                                    &times;
+                                </button>
+                                <h3 className="text-2xl font-bold text-[#333] mb-6 text-center tracking-wide">Your Orders</h3>
+                                <div className="grid grid-cols-2 gap-5 w-full text-center">
+                                    <div className="bg-blue-50 p-5 rounded-lg flex flex-col items-center">
+                                        <p className="text-2xl font-bold text-blue-600">{dashboardData.total_orders}</p>
+                                        <p className="text-sm text-blue-800">Total Orders</p>
+                                    </div>
+                                    <div className="bg-yellow-50 p-5 rounded-lg flex flex-col items-center">
+                                        <p className="text-2xl font-bold text-yellow-600">{dashboardData.pending_orders}</p>
+                                        <p className="text-sm text-yellow-800">Pending</p>
+                                    </div>
+                                    <div className="bg-orange-50 p-5 rounded-lg flex flex-col items-center">
+                                        <p className="text-2xl font-bold text-orange-600">{dashboardData.inprogress_orders}</p>
+                                        <p className="text-sm text-orange-800">In Progress</p>
+                                    </div>
+                                    <div className="bg-green-50 p-5 rounded-lg flex flex-col items-center">
+                                        <p className="text-2xl font-bold text-green-600">{dashboardData.complete_orders}</p>
+                                        <p className="text-sm text-green-800">Completed</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="bg-yellow-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-yellow-600">{dashboardData.pending_orders}</p>
-                                <p className="text-sm text-yellow-800">Pending</p>
-                            </div>
-                            <div className="bg-orange-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-orange-600">{dashboardData.inprogress_orders}</p>
-                                <p className="text-sm text-orange-800">In Progress</p>
-                            </div>
-                            <div className="bg-green-50 p-4 rounded-lg">
-                                <p className="text-2xl font-bold text-green-600">{dashboardData.complete_orders}</p>
-                                <p className="text-sm text-green-800">Completed</p>
+                        </div>
+                        {/* Bottom sheet for small screens */}
+                        <div className="sm:hidden fixed left-0 right-0 bottom-0 z-40 flex items-end justify-center" style={{backdropFilter: 'blur(6px)', background: 'rgba(255,255,255,0.25)', marginBottom: '80px'}}>
+                            <div className="bg-white rounded-t-2xl shadow-2xl p-6 w-full max-w-md mx-auto border border-gray-200 flex flex-col items-center animate-fadeIn relative">
+                                <button
+                                    className="absolute top-3 right-5 text-gray-400 hover:text-gray-700 text-2xl font-bold"
+                                    onClick={() => setShowOrdersModal(false)}
+                                    aria-label="Close"
+                                >
+                                    &times;
+                                </button>
+                                <h3 className="text-lg font-bold text-[#333] mb-6 text-center tracking-wide">Your Orders</h3>
+                                <div className="grid grid-cols-2 gap-3 w-full text-center">
+                                    <div className="bg-blue-50 p-3 rounded-lg flex flex-col items-center">
+                                        <p className="text-xl font-bold text-blue-600">{dashboardData.total_orders}</p>
+                                        <p className="text-xs text-blue-800">Total Orders</p>
+                                    </div>
+                                    <div className="bg-yellow-50 p-3 rounded-lg flex flex-col items-center">
+                                        <p className="text-xl font-bold text-yellow-600">{dashboardData.pending_orders}</p>
+                                        <p className="text-xs text-yellow-800">Pending</p>
+                                    </div>
+                                    <div className="bg-orange-50 p-3 rounded-lg flex flex-col items-center">
+                                        <p className="text-xl font-bold text-orange-600">{dashboardData.inprogress_orders}</p>
+                                        <p className="text-xs text-orange-800">In Progress</p>
+                                    </div>
+                                    <div className="bg-green-50 p-3 rounded-lg flex flex-col items-center">
+                                        <p className="text-xl font-bold text-green-600">{dashboardData.complete_orders}</p>
+                                        <p className="text-xs text-green-800">Completed</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -231,13 +277,7 @@ const Dashboard = () => {
                     </button>
                 </div>
 
-                {/* Logout Button */}
-                <button
-                    onClick={handleLogout}
-                    className="mt-6 px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition"
-                >
-                    Logout
-                </button>
+                {/* Logout Button removed as it is now in Navbar */}
             </main>
 
             {/* Footer */}

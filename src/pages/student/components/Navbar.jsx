@@ -249,6 +249,14 @@ function Navbar() {
 
                         {/* Navigation Menu - Simplified */}
                         <div className="py-4">
+                            {/* View Orders for small screens inside sidebar */}
+                            <Link
+                                to="/student/orders"
+                                className="flex items-center px-6 py-4 hover:bg-gray-50 text-gray-700 transition-colors duration-200 w-full text-left sm:hidden"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                <span className="text-base font-medium">View Orders</span>
+                            </Link>
                             <Link
                                 to="/student/profile"
                                 className="flex items-center px-6 py-4 hover:bg-gray-50 text-gray-700 transition-colors duration-200"
