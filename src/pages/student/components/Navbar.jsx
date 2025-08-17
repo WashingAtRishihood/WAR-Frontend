@@ -1,14 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/rishihood-logo.webp";
 import { Bell, User, LogOut, UserCheck, Clock, Plus, Menu, X, Home, FileText, Settings, Shield, UserCircle, Star } from "lucide-react";
 
 function Navbar() {
+    const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [rating, setRating] = useState(0);
     const [hasRated, setHasRated] = useState(false);
     const dropdownRef = useRef();
+
+    const handleLogout = () => {
+        // Clear all student data from localStorage
+        localStorage.removeItem('studentData');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userType');
+        
+        // Close dropdown and navigate to home
+        setIsDropdownOpen(false);
+        navigate('/home');
+    };
 
     // Service hours logic
     const getServiceStatus = () => {
@@ -167,10 +179,7 @@ function Navbar() {
                                     </button>
                                     <div className="border-t border-gray-100 my-1"></div>
                                     <button
-                                        onClick={() => {
-                                            setIsDropdownOpen(false);
-                                            // Add logout logic here
-                                        }}
+                                        onClick={handleLogout}
                                         className="flex items-center space-x-3 px-4 py-3 hover:bg-red-50 text-sm text-red-600 transition-colors duration-200 w-full"
                                     >
                                         <LogOut className="w-4 h-4" />
@@ -303,7 +312,7 @@ function Navbar() {
                             <button
                                 onClick={() => {
                                     setIsMobileMenuOpen(false);
-                                    // Add logout logic here
+                                    handleLogout();
                                 }}
                                 className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
                             >

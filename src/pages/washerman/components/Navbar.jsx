@@ -14,6 +14,17 @@ function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = React.useRef();
 
+  const handleLogout = () => {
+    // Clear all washerman data from localStorage
+    localStorage.removeItem('washermanData');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userType');
+    
+    // Close dropdown and navigate to home
+    setIsDropdownOpen(false);
+    navigate('/home');
+  };
+
   // Handler for toggle
   const handleStatusToggle = () => {
     setServiceStatus(prev => {
@@ -105,10 +116,7 @@ function Navbar() {
                   </Link>
                   <div className="border-t border-gray-100 my-1"></div>
                   <button
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      navigate('/washerman/login');
-                    }}
+                    onClick={handleLogout}
                     className="flex items-center space-x-3 px-4 py-3 hover:bg-red-50 text-sm text-red-600 transition-colors duration-200 w-full"
                   >
                     <LogOut className="w-4 h-4" />
@@ -202,7 +210,7 @@ function Navbar() {
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
-                  navigate('/washerman/login');
+                  handleLogout();
                 }}
                 className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
               >

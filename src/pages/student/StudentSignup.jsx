@@ -9,6 +9,7 @@ function StudentSignup() {
         name: "",
         email: "",
         enrollment_no: "",
+        bag_no: "",
         phone_no: "",
         residency_no: ""
     });
@@ -28,7 +29,7 @@ function StudentSignup() {
         e.preventDefault();
         
         // Validate required fields
-        if (!formData.name || !formData.email || !formData.enrollment_no || !formData.phone_no || !formData.residency_no) {
+        if (!formData.name || !formData.email || !formData.enrollment_no || !formData.bag_no || !formData.phone_no || !formData.residency_no) {
             setError("Please fill in all fields");
             return;
         }
@@ -54,6 +55,7 @@ function StudentSignup() {
                     name: "",
                     email: "",
                     enrollment_no: "",
+                    bag_no: "",
                     phone_no: "",
                     residency_no: ""
                 });
@@ -129,6 +131,20 @@ function StudentSignup() {
                                 name="enrollment_no"
                                 placeholder="Enter your enrollment number"
                                 value={formData.enrollment_no}
+                                onChange={handleInputChange}
+                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-base sm:text-lg"
+                                required
+                            />
+                        </div>
+
+                        {/* Bag Number Field */}
+                        <div className="relative">
+                            <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                            <input
+                                type="text"
+                                name="bag_no"
+                                placeholder="Enter your bag number (e.g., B-558)"
+                                value={formData.bag_no}
                                 onChange={handleInputChange}
                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-base sm:text-lg"
                                 required

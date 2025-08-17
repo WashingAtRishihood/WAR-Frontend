@@ -1,128 +1,258 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaTshirt, FaCalendarAlt } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import logo from "../../assets/rishihood-logo.webp";
 
 function WashermanDashboard() {
-  const [selectedTab, setSelectedTab] = useState("B");
+  const navigate = useNavigate();
+  const [selectedTab, setSelectedTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [bagStatus, setBagStatus] = useState({});
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [washermanData, setWashermanData] = useState(null);
 
-  const bagsData = [
-    { id: 1, bagNo: "B-232", clothes: 6, date: "27/07/2025" },
-    { id: 2, bagNo: "G-354", clothes: 3, date: "21/07/2025" },
-    { id: 3, bagNo: "G-121", clothes: 7, date: "8/07/2025" },
-    { id: 5, bagNo: "B-229", clothes: 12, date: "29/08/2025" },
-    { id: 6, bagNo: "G-423", clothes: 5, date: "9/07/2025" },
-    { id: 7, bagNo: "B-675", clothes: 10, date: "19/08/2025" },
-    { id: 8, bagNo: "G-129", clothes: 8, date: "9/06/2025" },
-  ];
+  useEffect(() => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userType = localStorage.getItem('userType');
+    const washermanDataStr = localStorage.getItem('washermanData');
+    
+    if (!isLoggedIn || userType !== 'washerman' || !washermanDataStr) {
+      navigate('/washerman/login');
+      return;
+    }
 
-  const handleReceived = (id) => {
-    setBagStatus((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], received: true },
-    }));
+    try {
+      const washerman = JSON.parse(washermanDataStr);
+      setWashermanData(washerman);
+      fetchOrders();
+    } catch (error) {
+      console.error('Error parsing washerman data:', error);
+      navigate('/washerman/login');
+    }
+  }, [navigate]);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/orders/all/');
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data);
+      } else {
+        setError("Failed to fetch orders");
+      }
+    } catch (error) {
+      setError("Network error while fetching orders");
+      console.error('Orders fetch error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReady = (id) => {
-    setBagStatus((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], ready: true },
-    }));
+  const handleStatusUpdate = async (orderId, newStatus) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/orders/${orderId}/status/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: newStatus
+        })
+      });
+
+      if (response.ok) {
+        // Refresh orders after successful update
+        fetchOrders();
+      } else {
+        const data = await response.json();
+        setError(data.error || "Failed to update order status");
+      }
+    } catch (error) {
+      setError("Network error while updating order status");
+      console.error('Status update error:', error);
+    }
   };
 
-  const filteredBags = bagsData.filter((bag) => {
-    const matchesTab = bag.bagNo.startsWith(selectedTab);
-    const matchesSearch = bag.bagNo.toLowerCase().includes(searchTerm.toLowerCase());
+  const handleReceived = (orderId) => {
+    handleStatusUpdate(orderId, 'inprogress');
+  };
+
+  const handleReady = (orderId) => {
+    handleStatusUpdate(orderId, 'complete');
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'inprogress':
+        return 'text-orange-600 bg-orange-100';
+      case 'complete':
+        return 'text-green-600 bg-green-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'Pending';
+      case 'inprogress':
+        return 'In Progress';
+      case 'complete':
+        return 'Completed';
+      default:
+        return status;
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB');
+  };
+
+  const filteredOrders = orders.filter((order) => {
+    const matchesTab = selectedTab === "all" || 
+                      (selectedTab === "pending" && order.status === "pending") ||
+                      (selectedTab === "inprogress" && order.status === "inprogress") ||
+                      (selectedTab === "complete" && order.status === "complete");
+    const matchesSearch = order.bag_no.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesTab && matchesSearch;
   });
+
+  if (!washermanData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#faf6f3]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a30c34]"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#faf6f3] pt-20">
       <Navbar />
       <div className="max-w-4xl mx-auto p-6 font-['Playfair_Display']">
-        <h1 className="text-3xl font-bold text-center mb-6">Students Bags</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">Students Orders</h1>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 w-full bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-800 text-center font-medium">
+              {error}
+            </p>
+          </div>
+        )}
 
         {/* Tabs + Search */}
         <div className="flex items-center gap-4 mb-6">
           <div className="flex border rounded-lg overflow-hidden">
             <button
-              className={`px-4 py-2 font-semibold ${selectedTab === "B" ? "bg-[#a30c34] text-white" : "bg-white"
+              className={`px-4 py-2 font-semibold ${selectedTab === "all" ? "bg-[#a30c34] text-white" : "bg-white"
                 }`}
-              onClick={() => setSelectedTab("B")}
+              onClick={() => setSelectedTab("all")}
             >
-              B
+              All
             </button>
             <button
-              className={`px-4 py-2 font-semibold ${selectedTab === "G" ? "bg-[#a30c34] text-white" : "bg-white"
+              className={`px-4 py-2 font-semibold ${selectedTab === "pending" ? "bg-[#a30c34] text-white" : "bg-white"
                 }`}
-              onClick={() => setSelectedTab("G")}
+              onClick={() => setSelectedTab("pending")}
             >
-              G
+              Pending
+            </button>
+            <button
+              className={`px-4 py-2 font-semibold ${selectedTab === "inprogress" ? "bg-[#a30c34] text-white" : "bg-white"
+                }`}
+              onClick={() => setSelectedTab("inprogress")}
+            >
+              In Progress
+            </button>
+            <button
+              className={`px-4 py-2 font-semibold ${selectedTab === "complete" ? "bg-[#a30c34] text-white" : "bg-white"
+                }`}
+              onClick={() => setSelectedTab("complete")}
+            >
+              Complete
             </button>
           </div>
           <input
             type="text"
-            placeholder="🔍 Bag Number"
+            placeholder="🔍 Search Bag Number"
             className="flex-1 border rounded-lg px-4 py-2"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        {/* Bag Cards */}
-        <div className="space-y-4">
-          {filteredBags.map((bag) => {
-            const status = bagStatus[bag.id] || {};
-            return (
-              <div
-                key={bag.id}
-                className="flex justify-between items-center bg-[#fff9f0] shadow-sm rounded-xl p-4 border transition-transform transform hover:scale-[1.02] hover:shadow-md"
-              >
-                <div>
-                  <p className="font-semibold text-lg">
-                    Bag No: <span className="text-red-700">{bag.bagNo}</span>
-                  </p>
-                  <p className="text-gray-700 flex items-center gap-2">
-                    <FaTshirt className="text-gray-500" /> Clothes: {bag.clothes}
-                  </p>
-                  <p className="text-gray-700 flex items-center gap-2">
-                    <FaCalendarAlt className="text-gray-500" /> Date:{" "}
-                    <span className="text-red-600">{bag.date}</span>
-                  </p>
-                </div>
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a30c34] mx-auto mb-4"></div>
+            <p className="text-gray-500 text-lg">Loading orders...</p>
+          </div>
+        )}
 
-                {/* Action Buttons */}
-                <div className="flex flex-col gap-2">
-                  {!status.received && (
-                    <button
-                      className="bg-green-600 text-white px-4 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-green-700 text-sm sm:text-base"
-                      onClick={() => handleReceived(bag.id)}
-                    >
-                      Mark as Received
-                    </button>
-                  )}
-                  {status.received && !status.ready && (
-                    <button
-                      className="bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-blue-700 text-xs sm:text-base"
-                      onClick={() => handleReady(bag.id)}
-                    >
-                      Mark as Ready
-                    </button>
-                  )}
-                  {status.ready && (
-                    <span className="text-green-700 font-semibold">Ready</span>
-                  )}
-                </div>
+        {/* Order Cards */}
+        {!loading && (
+          <div className="space-y-4">
+            {filteredOrders.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-lg">No orders found.</p>
               </div>
-            );
-          })}
+            ) : (
+              filteredOrders.map((order) => (
+                <div
+                  key={order.id}
+                  className="flex justify-between items-center bg-[#fff9f0] shadow-sm rounded-xl p-4 border transition-transform transform hover:scale-[1.02] hover:shadow-md"
+                >
+                  <div>
+                    <p className="font-semibold text-lg">
+                      Order #{order.id} - Bag No: <span className="text-red-700">{order.bag_no}</span>
+                    </p>
+                    <p className="text-gray-700 flex items-center gap-2">
+                      <FaTshirt className="text-gray-500" /> Clothes: {order.number_of_clothes}
+                    </p>
+                    <p className="text-gray-700 flex items-center gap-2">
+                      <FaCalendarAlt className="text-gray-500" /> Date:{" "}
+                      <span className="text-red-600">{formatDate(order.submission_date)}</span>
+                    </p>
+                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
+                      {getStatusText(order.status)}
+                    </span>
+                  </div>
 
-          {filteredBags.length === 0 && (
-            <p className="text-center text-gray-500">No bags found.</p>
-          )}
-        </div>
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-2">
+                    {order.status === 'pending' && (
+                      <button
+                        className="bg-green-600 text-white px-4 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-green-700 text-sm sm:text-base"
+                        onClick={() => handleReceived(order.id)}
+                      >
+                        Mark as Received
+                      </button>
+                    )}
+                    {order.status === 'inprogress' && (
+                      <button
+                        className="bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-blue-700 text-xs sm:text-base"
+                        onClick={() => handleReady(order.id)}
+                      >
+                        Mark as Ready
+                      </button>
+                    )}
+                    {order.status === 'complete' && (
+                      <span className="text-green-700 font-semibold">Ready for Pickup</span>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

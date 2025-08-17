@@ -9,23 +9,33 @@ const Profile = () => {
     const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
     const [studentData, setStudentData] = useState(null);
-    const [profileData, setProfileData] = useState({
-        name: "Ritesh Kumar",
-        email: "ritesh.kumar2024@nst.rishihood.edu.in",
-        phone_no: "+91 98765 43210",
-        enrollment_no: "2401010384",
-        bag_no: "B-558",
-        department: "Computer Science",
-        year: "2nd Year",
-        residency_no: "Residency 1, Room 246",
-        created_at: "2025-08-01"
-    });
-    // Add error/success/loading states
+    const [profileData, setProfileData] = useState({});
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const [editData, setEditData] = useState({ ...profileData });
+    const [editData, setEditData] = useState({});
+
+    useEffect(() => {
+        // Check if user is logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const studentDataStr = localStorage.getItem('studentData');
+
+        if (!isLoggedIn || !studentDataStr) {
+            navigate('/student/login');
+            return;
+        }
+
+        try {
+            const student = JSON.parse(studentDataStr);
+            setStudentData(student);
+            setProfileData(student);
+            setEditData(student);
+        } catch (error) {
+            console.error('Error parsing student data:', error);
+            navigate('/student/login');
+        }
+    }, [navigate]);
 
     const handleEdit = () => {
         setEditData({ ...profileData });
@@ -35,14 +45,21 @@ const Profile = () => {
     };
 
     const handleSave = () => {
+        // Note: Since backend doesn't have student update endpoint,
+        // we'll just update localStorage for now
         setProfileData({ ...editData });
+        setStudentData({ ...editData });
+        localStorage.setItem('studentData', JSON.stringify(editData));
         setIsEditing(false);
-        // Here you can add API call to update profile
+        setSuccess("Profile updated successfully!");
+        setTimeout(() => setSuccess(""), 3000);
     };
 
     const handleCancel = () => {
         setEditData({ ...profileData });
         setIsEditing(false);
+        setError("");
+        setSuccess("");
     };
 
     const handleInputChange = (field, value) => {
@@ -52,13 +69,25 @@ const Profile = () => {
         }));
     };
 
-    // Add missing handleLogout function
     const handleLogout = () => {
         localStorage.removeItem('studentData');
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('userType');
         navigate('/home');
     };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB');
+    };
+
+    if (!studentData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#faf6f3]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a30c34]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex flex-col bg-[#faf6f3] font-['Playfair_Display'] relative">
@@ -252,12 +281,12 @@ const Profile = () => {
                                     {isEditing ? (
                                         <input
                                             type="text"
-                                            value={editData.residency_no?.split(',')[0] || ''}
+                                            value={editData.residency_no || ''}
                                             onChange={(e) => handleInputChange('residency_no', e.target.value)}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-sm"
                                         />
                                     ) : (
-                                        <p className="text-sm sm:text-base text-gray-800">{profileData.residency_no?.split(',')[0]}</p>
+                                        <p className="text-sm sm:text-base text-gray-800">{profileData.residency_no}</p>
                                     )}
                                 </div>
                             </div>
