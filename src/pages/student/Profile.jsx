@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { User, Mail, Phone, BookOpen, Calendar, MapPin, Edit, Save, X, ArrowLeft, Package } from "lucide-react";
 import logo from "../../assets/rishihood-logo.webp";
 
@@ -293,14 +292,9 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Logout Button removed */}
             </main>
-
-            {/* Footer */}
-            <Footer className="fixed bottom-0 left-0 w-full z-10 shadow-md" />
         </div>
     );
 };
 
-export default Profile; 
+export default Profile;

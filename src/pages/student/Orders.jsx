@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
@@ -65,7 +64,6 @@ const Orders = () => {
                     )}
                 </div>
             </main>
-            <Footer />
         </div>
     );
 };

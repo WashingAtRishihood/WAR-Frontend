@@ -11,7 +11,7 @@ function StudentLogin() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         if (!email || !enrollmentNo) {
             setError("Please fill in all fields");
             return;
@@ -38,7 +38,7 @@ function StudentLogin() {
                 // Store student data in localStorage for future use
                 localStorage.setItem('studentData', JSON.stringify(data.student));
                 localStorage.setItem('isLoggedIn', 'true');
-                
+
                 // Navigate to dashboard
                 navigate("/student/dashboard");
             } else {
@@ -66,7 +66,7 @@ function StudentLogin() {
             {/* Main Section */}
             <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
                 <h1 className="text-2xl sm:text-3xl font-semibold text-[#333] mb-8">
-                    Student Login
+                    Login
                 </h1>
 
                 <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full max-w-sm">
@@ -86,14 +86,14 @@ function StudentLogin() {
                         className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
                         required
                     />
-                    
+
                     {/* Error Message */}
                     {error && (
                         <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-md p-3">
                             {error}
                         </div>
                     )}
-                    
+
                     <button
                         type="submit"
                         disabled={loading}
@@ -114,7 +114,7 @@ function StudentLogin() {
                     Don't have an account?{" "}
                     <span
                         className="text-[#c45c29] font-medium hover:underline cursor-pointer"
-                        onClick={() => navigate("/student/signup")}
+                        onClick={() => navigate("/student/signup1")}
                     >
                         Sign up
                     </span>

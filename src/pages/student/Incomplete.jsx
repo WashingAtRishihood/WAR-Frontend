@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
 
 const getStatusColor = (status) => {
@@ -114,7 +113,6 @@ const Incomplete = () => {
                     )}
                 </div>
             </main>
-            <Footer className="fixed bottom-0 left-0 w-full z-10 shadow-md" />
         </div>
     );
 };

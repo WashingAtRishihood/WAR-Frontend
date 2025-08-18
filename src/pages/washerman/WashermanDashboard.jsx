@@ -18,7 +18,7 @@ function WashermanDashboard() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userType = localStorage.getItem('userType');
     const washermanDataStr = localStorage.getItem('washermanData');
-    
+
     if (!isLoggedIn || userType !== 'washerman' || !washermanDataStr) {
       navigate('/washerman/login');
       return;
@@ -117,10 +117,10 @@ function WashermanDashboard() {
   };
 
   const filteredOrders = orders.filter((order) => {
-    const matchesTab = selectedTab === "all" || 
-                      (selectedTab === "pending" && order.status === "pending") ||
-                      (selectedTab === "inprogress" && order.status === "inprogress") ||
-                      (selectedTab === "complete" && order.status === "complete");
+    const matchesTab = selectedTab === "all" ||
+      (selectedTab === "pending" && order.status === "pending") ||
+      (selectedTab === "inprogress" && order.status === "inprogress") ||
+      (selectedTab === "complete" && order.status === "complete");
     const matchesSearch = order.bag_no.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesTab && matchesSearch;
   });

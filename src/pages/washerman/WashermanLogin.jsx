@@ -11,7 +11,7 @@ function WashermanLogin() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         if (!username || !password) {
             setError("Please fill in all fields");
             return;
@@ -39,7 +39,7 @@ function WashermanLogin() {
                 localStorage.setItem('washermanData', JSON.stringify(data.washerman));
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userType', 'washerman');
-                
+
                 // Navigate to dashboard
                 navigate("/washerman/dashboard");
             } else {
@@ -67,7 +67,7 @@ function WashermanLogin() {
             {/* Main Section */}
             <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
                 <h1 className="text-2xl sm:text-3xl font-semibold text-[#333] mb-8">
-                    Washerman Login
+                    Login
                 </h1>
 
                 <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full max-w-sm">
@@ -87,14 +87,14 @@ function WashermanLogin() {
                         className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
                         required
                     />
-                    
+
                     {/* Error Message */}
                     {error && (
                         <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-md p-3">
                             {error}
                         </div>
                     )}
-                    
+
                     <button
                         type="submit"
                         disabled={loading}
@@ -110,10 +110,6 @@ function WashermanLogin() {
                         )}
                     </button>
                 </form>
-
-                <div className="mt-6 text-gray-600 text-sm">
-                    <p>Contact admin to get your username and password</p>
-                </div>
             </main>
         </div>
     );

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/rishihood-logo.webp";
 import { Bell, User, LogOut, UserCheck, Clock, Plus, Menu, X, Home, FileText, Settings, Shield, UserCircle, Star } from "lucide-react";
+import Footer from "./Footer";
 
 function Navbar() {
     const navigate = useNavigate();
@@ -323,6 +324,9 @@ function Navbar() {
                     </div>
                 </div>
             )}
+            
+            {/* Footer - pass mobile menu state */}
+            <Footer isHidden={isMobileMenuOpen} />
         </>
     );
 }
