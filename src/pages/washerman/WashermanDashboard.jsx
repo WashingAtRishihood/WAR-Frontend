@@ -136,62 +136,52 @@ function WashermanDashboard() {
   return (
     <div className="min-h-screen bg-[#faf6f3] pt-20">
       <Navbar />
-      <div className="max-w-4xl mx-auto p-6 font-['Playfair_Display']">
-        <h1 className="text-3xl font-bold text-center mb-6">Students Orders</h1>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 font-['Playfair_Display']">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-900">
+          Orders
+        </h1>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 w-full bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-800 text-center font-medium">
-              {error}
-            </p>
+          <div className="mb-6 w-full bg-red-50 border border-red-200 rounded-xl p-4">
+            <p className="text-red-800 text-center font-medium">{error}</p>
           </div>
         )}
 
         {/* Tabs + Search */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex border rounded-lg overflow-hidden">
-            <button
-              className={`px-4 py-2 font-semibold ${selectedTab === "all" ? "bg-[#a30c34] text-white" : "bg-white"
-                }`}
-              onClick={() => setSelectedTab("all")}
-            >
-              All
-            </button>
-            <button
-              className={`px-4 py-2 font-semibold ${selectedTab === "pending" ? "bg-[#a30c34] text-white" : "bg-white"
-                }`}
-              onClick={() => setSelectedTab("pending")}
-            >
-              Pending
-            </button>
-            <button
-              className={`px-4 py-2 font-semibold ${selectedTab === "inprogress" ? "bg-[#a30c34] text-white" : "bg-white"
-                }`}
-              onClick={() => setSelectedTab("inprogress")}
-            >
-              In Progress
-            </button>
-            <button
-              className={`px-4 py-2 font-semibold ${selectedTab === "complete" ? "bg-[#a30c34] text-white" : "bg-white"
-                }`}
-              onClick={() => setSelectedTab("complete")}
-            >
-              Complete
-            </button>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          {/* Tabs */}
+          <div className="flex flex-wrap border rounded-xl overflow-hidden bg-white shadow-sm">
+            {["all", "pending", "inprogress", "complete"].map((tab) => (
+              <button
+                key={tab}
+                className={`px-4 py-2 font-medium text-sm sm:text-base capitalize transition-colors ${selectedTab === tab
+                    ? "bg-[#a30c34] text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+                onClick={() => setSelectedTab(tab)}
+              >
+                {tab === "inprogress" ? "In Progress" : tab}
+              </button>
+            ))}
           </div>
-          <input
-            type="text"
-            placeholder="🔍 Search Bag Number"
-            className="flex-1 border rounded-lg px-4 py-2"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+
+          {/* Search */}
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="🔍 Search Bag Number"
+              className="w-full border rounded-xl px-4 py-2 text-gray-700 focus:ring-2 focus:ring-[#a30c34] outline-none shadow-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
 
         {/* Loading State */}
         {loading && (
-          <div className="text-center py-8">
+          <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a30c34] mx-auto mb-4"></div>
             <p className="text-gray-500 text-lg">Loading orders...</p>
           </div>
@@ -201,51 +191,62 @@ function WashermanDashboard() {
         {!loading && (
           <div className="space-y-4">
             {filteredOrders.length === 0 ? (
-              <div className="text-center py-8">
+              <div className="text-center py-10 bg-white rounded-xl shadow-sm border">
                 <p className="text-gray-500 text-lg">No orders found.</p>
               </div>
             ) : (
               filteredOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="flex justify-between items-center bg-[#fff9f0] shadow-sm rounded-xl p-4 border transition-transform transform hover:scale-[1.02] hover:shadow-md"
+                  className="flex flex-col sm:flex-row justify-between gap-4 bg-white shadow-md rounded-xl p-5 border hover:shadow-lg transition"
                 >
-                  <div>
+                  {/* Order Info */}
+                  <div className="space-y-2">
                     <p className="font-semibold text-lg">
-                      Order #{order.id} - Bag No: <span className="text-red-700">{order.bag_no}</span>
+                      Bag No:{" "}
+                      <span className="text-[#a30c34]">{order.bag_no}</span>
                     </p>
-                    <p className="text-gray-700 flex items-center gap-2">
-                      <FaTshirt className="text-gray-500" /> Clothes: {order.number_of_clothes}
+                    <p className="text-gray-700 flex items-center gap-2 text-sm sm:text-base">
+                      <FaTshirt className="text-gray-500" /> Clothes:{" "}
+                      {order.number_of_clothes}
                     </p>
-                    <p className="text-gray-700 flex items-center gap-2">
+                    <p className="text-gray-700 flex items-center gap-2 text-sm sm:text-base">
                       <FaCalendarAlt className="text-gray-500" /> Date:{" "}
-                      <span className="text-red-600">{formatDate(order.submission_date)}</span>
+                      <span className="text-[#a30c34]">
+                        {formatDate(order.submission_date)}
+                      </span>
                     </p>
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(
+                        order.status
+                      )}`}
+                    >
                       {getStatusText(order.status)}
                     </span>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex flex-col gap-2">
-                    {order.status === 'pending' && (
+                  {/* Actions */}
+                  <div className="flex sm:flex-col gap-2 sm:items-end">
+                    {order.status === "pending" && (
                       <button
-                        className="bg-green-600 text-white px-4 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-green-700 text-sm sm:text-base"
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm sm:text-base transition"
                         onClick={() => handleReceived(order.id)}
                       >
                         Mark as Received
                       </button>
                     )}
-                    {order.status === 'inprogress' && (
+                    {order.status === "inprogress" && (
                       <button
-                        className="bg-blue-600 text-white px-3 sm:px-4 py-1 sm:py-1 rounded-lg hover:bg-blue-700 text-xs sm:text-base"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm sm:text-base transition"
                         onClick={() => handleReady(order.id)}
                       >
                         Mark as Ready
                       </button>
                     )}
-                    {order.status === 'complete' && (
-                      <span className="text-green-700 font-semibold">Ready for Pickup</span>
+                    {order.status === "complete" && (
+                      <span className="text-green-700 font-semibold text-sm sm:text-base">
+                        ✅ Ready for Pickup
+                      </span>
                     )}
                   </div>
                 </div>

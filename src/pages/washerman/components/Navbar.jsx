@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/rishihood-logo.webp";
 import { Clock, X, User, LogOut, Star, Settings, BarChart2, Menu } from "lucide-react";
+import { Globe } from "lucide-react";
+import { useLanguage } from "../../../contexts/LanguageContext";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -13,17 +15,31 @@ function Navbar() {
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = React.useRef();
+  const langDropdownRef = React.useRef();
 
   const handleLogout = () => {
     // Clear all washerman data from localStorage
     localStorage.removeItem('washermanData');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userType');
-    
+
     // Close dropdown and navigate to home
     setIsDropdownOpen(false);
     navigate('/home');
   };
+
+  const { language, setLanguage } = useLanguage();
+  const [isLangOpen, setIsLangOpen] = useState(false);
+
+  const languages = [
+    { code: "en", label: "English" },
+    { code: "hi", label: "हिन्दी" },
+    { code: "bn", label: "বাংলা" },
+    { code: "mr", label: "मराठी" },
+    { code: "ta", label: "தமிழ்" },
+    { code: "te", label: "తెలుగు" },
+    { code: "kn", label: "ಕನ್ನಡ" },
+  ];
 
   // Handler for toggle
   const handleStatusToggle = () => {
@@ -36,6 +52,16 @@ function Navbar() {
       };
     });
   };
+
+  React.useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target)) {
+        setIsLangOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
@@ -65,6 +91,48 @@ function Navbar() {
 
         {/* Right: Service Status (editable) & Profile Dropdown */}
         <div className="flex items-center space-x-4">
+          <div className="relative" ref={langDropdownRef}>
+            {/* Globe Button */}
+            <button
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 shadow-sm bg-white hover:bg-gray-50 transition"
+            >
+              <Globe className="w-5 h-5 text-gray-600" />
+              <span className="text-sm text-gray-700">{language.toUpperCase()}</span>
+              <svg
+                className={`w-4 h-4 text-gray-500 transform transition-transform ${isLangOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {/* Dropdown */}
+            {isLangOpen && (
+              <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-xl border border-gray-100 z-50 overflow-hidden">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => {
+                      setLanguage(lang.code);
+                      setIsLangOpen(false);
+                    }}
+                    className={`flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors
+            ${language === lang.code
+                        ? "bg-gray-100 font-medium text-gray-900"
+                        : "text-gray-700 hover:bg-gray-50"
+                      }`}
+                  >
+                    🌐 {lang.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           {/* Editable Service Status */}
           <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-full bg-white border border-gray-200 shadow group relative">
             <Clock className="w-4 h-4 text-gray-600 mr-1" />
@@ -107,7 +175,7 @@ function Navbar() {
                     <span>Stats</span>
                   </Link>
                   <Link
-                      to="/washerman/student-lookup"
+                    to="/washerman/student-lookup"
                     className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 transition-colors duration-200"
                     onClick={() => setIsDropdownOpen(false)}
                   >
