@@ -1,4 +1,8 @@
 
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import config from "../../config";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -49,7 +53,7 @@ const Incomplete = () => {
     const fetchIncompleteOrders = async (bagNo) => {
         setLoading(true);
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/orders/student/${bagNo}/`);
+            const response = await fetch(`${config.API_BASE_URL}/api/orders/student/${bagNo}/`);
             if (response.ok) {
                 const data = await response.json();
                 // Filter only incomplete orders

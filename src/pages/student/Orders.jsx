@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import config from "../../config";
 
 const Orders = () => {
     const [dashboardData, setDashboardData] = useState(null);
@@ -19,7 +20,7 @@ const Orders = () => {
 
     const fetchDashboardData = async (bagNo) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/student/dashboard/${bagNo}/`);
+            const response = await fetch(`${config.API_BASE_URL}/api/student/dashboard/${bagNo}/`);
             if (response.ok) {
                 const data = await response.json();
                 setDashboardData(data);

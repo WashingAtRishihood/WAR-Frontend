@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import config from "../../config";
 import { BarChart3, TrendingUp, Clock, CheckCircle, Package, Activity } from "lucide-react";
 import logo from "../../assets/rishihood-logo.webp";
 
@@ -36,7 +37,7 @@ function Stats() {
 
     const fetchStatsData = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/washerman/dashboard/');
+            const response = await fetch(`${config.API_BASE_URL}/api/washerman/dashboard/`);
             if (response.ok) {
                 const data = await response.json();
                 setStatsData(data);
@@ -51,7 +52,7 @@ function Stats() {
 
     const fetchRecentOrders = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/orders/all/');
+            const response = await fetch(`${config.API_BASE_URL}/api/orders/all/`);
             if (response.ok) {
                 const data = await response.json();
                 // Get last 10 orders for recent activity

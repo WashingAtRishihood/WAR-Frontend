@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
+import config from "../../config";
 
 const Dashboard = () => {
     const [showOrdersModal, setShowOrdersModal] = useState(false);
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
     const fetchDashboardData = async (bagNo) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/student/dashboard/${bagNo}/`);
+            const response = await fetch(`${config.API_BASE_URL}/api/student/dashboard/${bagNo}/`);
             if (response.ok) {
                 const data = await response.json();
                 setDashboardData(data);
@@ -63,7 +64,7 @@ const Dashboard = () => {
         setError("");
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/orders/create/', {
+            const response = await fetch(`${config.API_BASE_URL}/api/orders/create/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

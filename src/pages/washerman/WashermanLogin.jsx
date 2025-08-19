@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
+import config from "../../config";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 function WashermanLogin() {
@@ -23,7 +24,7 @@ function WashermanLogin() {
         setError("");
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/auth/washerman/login/', {
+            const response = await fetch(`${config.API_BASE_URL}/api/auth/washerman/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

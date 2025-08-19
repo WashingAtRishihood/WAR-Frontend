@@ -39,7 +39,7 @@ function Signup2() {
         setError("");
 
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/auth/student/signup/", {
+            const res = await fetch(`${config.API_BASE_URL}/api/auth/student/signup/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, ...formData }),

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import config from "../../config";
 import { Search, User, Mail, Phone, Hash, MapPin, Package, ArrowLeft } from "lucide-react";
 
 function StudentLookup() {
@@ -47,7 +48,7 @@ function StudentLookup() {
 
     try {
       // Search through all orders to find students
-      const response = await fetch('http://127.0.0.1:8000/api/orders/all/');
+      const response = await fetch(`${config.API_BASE_URL}/api/orders/all/`);
       if (response.ok) {
         const orders = await response.json();
 
@@ -93,7 +94,7 @@ function StudentLookup() {
     setError("");
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/student/${bagNo}/`);
+      const response = await fetch(`${config.API_BASE_URL}/api/orders/student/${bagNo}/`);
       if (response.ok) {
         const data = await response.json();
         setSelectedStudent(data.student);
