@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import config from "../../config";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import logo from "../../assets/rishihood-logo.webp";
 
 const getStatusColor = (status) => {
