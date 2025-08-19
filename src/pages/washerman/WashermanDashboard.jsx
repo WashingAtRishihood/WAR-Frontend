@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaTshirt, FaCalendarAlt } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import logo from "../../assets/rishihood-logo.webp";
-import config from "../../config.js";
+import { config } from "../../config.js";
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 

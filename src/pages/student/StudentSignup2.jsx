@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
+import { config } from "../../config.js";
 
 function Signup2() {
     const navigate = useNavigate();

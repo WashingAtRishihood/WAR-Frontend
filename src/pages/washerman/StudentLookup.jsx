@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import config from "../../config.js";
+import { config } from "../../config.js";
 import { Search, User, Mail, Phone, Hash, MapPin, Package, ArrowLeft } from "lucide-react";
 
 function StudentLookup() {
