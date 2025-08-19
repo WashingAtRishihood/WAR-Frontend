@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaTshirt, FaCalendarAlt } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import logo from "../../assets/rishihood-logo.webp";
-import { config } from "../../config.js";
+
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 
@@ -43,7 +43,7 @@ function WashermanDashboard() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${config.API_BASE_URL}/api/orders/all/`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders/all/`);
       if (response.ok) {
         const data = await response.json();
         setOrders(data);
@@ -60,7 +60,7 @@ function WashermanDashboard() {
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`${config.API_BASE_URL}/api/orders/${orderId}/status/`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders/${orderId}/status/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ function WashermanDashboard() {
     }
     setSaving(true);
     try {
-      const res = await fetch(`${config.API_BASE_URL}/api/orders/${editingOrderId}/count/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders/${editingOrderId}/count/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ number_of_clothes: parsed })

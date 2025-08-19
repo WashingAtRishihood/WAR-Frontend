@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
-import { config } from "../../config.js";
 
 function StudentLogin() {
     const navigate = useNavigate();
@@ -22,7 +21,7 @@ function StudentLogin() {
         setError("");
 
         try {
-            const response = await fetch(`${config.API_BASE_URL}/api/auth/student/login/`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/student/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

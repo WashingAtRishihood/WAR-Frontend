@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import { config } from "../../config.js";
+
 import logo from "../../assets/rishihood-logo.webp";
 
 const Completed = () => {
@@ -33,7 +33,7 @@ const Completed = () => {
 
     const fetchCompletedOrders = async (bagNo) => {
         try {
-            const response = await fetch(`${config.API_BASE_URL}/api/orders/student/${bagNo}/`);
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders/student/${bagNo}/`);
             if (response.ok) {
                 const data = await response.json();
                 // Filter only completed orders

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
-import { config } from "../../config.js";
 
 function Signup2() {
     const navigate = useNavigate();
@@ -40,7 +39,7 @@ function Signup2() {
         setError("");
 
         try {
-            const res = await fetch(`${config.API_BASE_URL}/api/auth/student/signup/`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/student/signup/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, ...formData }),

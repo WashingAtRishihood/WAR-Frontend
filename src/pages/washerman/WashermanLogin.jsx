@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
-import { config } from "../../config.js";
+
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 function WashermanLogin() {
@@ -24,7 +24,7 @@ function WashermanLogin() {
         setError("");
 
         try {
-            const response = await fetch(`${config.API_BASE_URL}/api/auth/washerman/login/`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/washerman/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
