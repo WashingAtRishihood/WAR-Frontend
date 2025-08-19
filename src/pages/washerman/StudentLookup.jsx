@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { Search, User, Mail, Phone, Hash, MapPin, Package } from "lucide-react";
+import { Search, User, Mail, Phone, Hash, MapPin, Package, ArrowLeft } from "lucide-react";
 
 function StudentLookup() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function StudentLookup() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userType = localStorage.getItem('userType');
     const washermanDataStr = localStorage.getItem('washermanData');
-    
+
     if (!isLoggedIn || userType !== 'washerman' || !washermanDataStr) {
       navigate('/washerman/login');
       return;
@@ -50,7 +50,7 @@ function StudentLookup() {
       const response = await fetch('http://127.0.0.1:8000/api/orders/all/');
       if (response.ok) {
         const orders = await response.json();
-        
+
         // Extract unique students and filter by search term
         const studentMap = new Map();
         orders.forEach(order => {
@@ -73,7 +73,7 @@ function StudentLookup() {
         );
 
         setSearchResults(filteredStudents);
-        
+
         if (filteredStudents.length === 0) {
           setError("No students found with the given search term");
         }
@@ -152,6 +152,16 @@ function StudentLookup() {
     <div className="min-h-screen bg-[#faf6f3] pt-20">
       <Navbar />
       <div className="max-w-6xl mx-auto p-6 font-['Playfair_Display']">
+        <div className="p-6 mb-4">
+          <button
+            onClick={() => navigate('/washerman/dashboard')}
+            className="inline-flex items-center gap-2 text-[#a30c34] hover:text-[#8b092d] font-medium"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back
+          </button>
+        </div>
         <h1 className="text-3xl font-bold text-center mb-6">Student Lookup</h1>
 
         {/* Search Section */}
@@ -236,17 +246,8 @@ function StudentLookup() {
             <div className="bg-white rounded-xl shadow-md p-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-xl font-semibold">Student Information</h2>
-                <button
-                  onClick={() => {
-                    setSelectedStudent(null);
-                    setStudentOrders([]);
-                  }}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ← Back to Search
-                </button>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <User className="w-5 h-5 text-gray-500" />
@@ -255,7 +256,7 @@ function StudentLookup() {
                     <p className="font-medium">{selectedStudent.name}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gray-500" />
                   <div>
@@ -263,7 +264,7 @@ function StudentLookup() {
                     <p className="font-medium">{selectedStudent.email}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   <Hash className="w-5 h-5 text-gray-500" />
                   <div>
@@ -271,7 +272,7 @@ function StudentLookup() {
                     <p className="font-medium">{selectedStudent.enrollment_no}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   <Package className="w-5 h-5 text-gray-500" />
                   <div>
@@ -279,7 +280,7 @@ function StudentLookup() {
                     <p className="font-medium">{selectedStudent.bag_no}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gray-500" />
                   <div>
@@ -287,7 +288,7 @@ function StudentLookup() {
                     <p className="font-medium">{selectedStudent.phone_no}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   <MapPin className="w-5 h-5 text-gray-500" />
                   <div>
@@ -301,7 +302,7 @@ function StudentLookup() {
             {/* Order History */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-xl font-semibold mb-4">Order History</h2>
-              
+
               {studentOrders.length === 0 ? (
                 <p className="text-gray-500 text-center py-8">No orders found</p>
               ) : (

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FaTshirt, FaCalendarAlt } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import logo from "../../assets/rishihood-logo.webp";
+import { FiSearch } from "react-icons/fi";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 
 function WashermanDashboard() {
   const navigate = useNavigate();
@@ -12,6 +14,9 @@ function WashermanDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [washermanData, setWashermanData] = useState(null);
+  const [editingOrderId, setEditingOrderId] = useState(null);
+  const [editingCount, setEditingCount] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
@@ -77,6 +82,45 @@ function WashermanDashboard() {
     }
   };
 
+  const startEdit = (orderId, currentCount) => {
+    setEditingOrderId(orderId);
+    setEditingCount(String(currentCount ?? ''));
+  };
+
+  const cancelEdit = () => {
+    setEditingOrderId(null);
+    setEditingCount("");
+  };
+
+  const saveEdit = async () => {
+    if (!editingOrderId) return;
+    const parsed = parseInt(editingCount, 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      setError("Please enter a valid positive number of clothes");
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/orders/${editingOrderId}/count/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ number_of_clothes: parsed })
+      });
+      if (res.ok) {
+        cancelEdit();
+        fetchOrders();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to update count");
+      }
+    } catch (e) {
+      setError("Network error while updating count");
+      console.error(e);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleReceived = (orderId) => {
     handleStatusUpdate(orderId, 'inprogress');
   };
@@ -134,10 +178,10 @@ function WashermanDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f3] pt-20">
+    <div className="min-h-screen bg-[#faf6f3]">
       <Navbar />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 font-['Playfair_Display']">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 font-['Playfair_Display']">
         <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-900">
           Orders
         </h1>
@@ -157,8 +201,8 @@ function WashermanDashboard() {
               <button
                 key={tab}
                 className={`px-4 py-2 font-medium text-sm sm:text-base capitalize transition-colors ${selectedTab === tab
-                    ? "bg-[#a30c34] text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
+                  ? "bg-[#a30c34] text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
                   }`}
                 onClick={() => setSelectedTab(tab)}
               >
@@ -169,13 +213,16 @@ function WashermanDashboard() {
 
           {/* Search */}
           <div className="flex-1">
-            <input
-              type="text"
-              placeholder="🔍 Search Bag Number"
-              className="w-full border rounded-xl px-4 py-2 text-gray-700 focus:ring-2 focus:ring-[#a30c34] outline-none shadow-sm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="relative">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search Bag Number"
+                className="w-full border rounded-xl pl-10 pr-4 py-2 text-gray-700 focus:ring-2 focus:ring-[#a30c34] outline-none shadow-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </div>
 
@@ -206,10 +253,11 @@ function WashermanDashboard() {
                       Bag No:{" "}
                       <span className="text-[#a30c34]">{order.bag_no}</span>
                     </p>
-                    <p className="text-gray-700 flex items-center gap-2 text-sm sm:text-base">
-                      <FaTshirt className="text-gray-500" /> Clothes:{" "}
-                      {order.number_of_clothes}
-                    </p>
+                    <div className="text-gray-700 flex items-center gap-2 text-sm sm:text-base">
+                      <FaTshirt className="text-gray-500" />
+                      <span>Clothes:</span>
+                      <span className="font-medium">{order.number_of_clothes}</span>
+                    </div>
                     <p className="text-gray-700 flex items-center gap-2 text-sm sm:text-base">
                       <FaCalendarAlt className="text-gray-500" /> Date:{" "}
                       <span className="text-[#a30c34]">
@@ -226,14 +274,61 @@ function WashermanDashboard() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex sm:flex-col gap-2 sm:items-end">
+                  <div className="flex flex-wrap items-center gap-2">
                     {order.status === "pending" && (
-                      <button
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm sm:text-base transition"
-                        onClick={() => handleReceived(order.id)}
-                      >
-                        Mark as Received
-                      </button>
+                      <>
+                        {editingOrderId === order.id ? (
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="px-2 py-1 bg-gray-100 rounded-md border hover:bg-gray-200"
+                              onClick={() => setEditingCount((c) => String(Math.max(1, (parseInt(c || '0', 10) || 0) - 1)))}
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              min="1"
+                              value={editingCount}
+                              onChange={(e) => setEditingCount(e.target.value)}
+                              className="w-20 text-center border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#a30c34]"
+                            />
+                            <button
+                              className="px-2 py-1 bg-gray-100 rounded-md border hover:bg-gray-200"
+                              onClick={() => setEditingCount((c) => String((parseInt(c || '0', 10) || 0) + 1))}
+                            >
+                              +
+                            </button>
+                            <button
+                              className="px-3 py-1 bg-[#a30c34] text-white rounded-md hover:bg-[#8b092d] disabled:bg-gray-400"
+                              onClick={saveEdit}
+                              disabled={saving}
+                            >
+                              {saving ? 'Saving...' : 'Save'}
+                            </button>
+                            <button
+                              className="px-3 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                              onClick={cancelEdit}
+                              type="button"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 text-sm sm:text-base transition"
+                            onClick={() => startEdit(order.id, order.number_of_clothes)}
+                            type="button"
+                          >
+                            Edit Count
+                          </button>
+                        )}
+                        <button
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm sm:text-base transition"
+                          onClick={() => handleReceived(order.id)}
+                        >
+                          Mark as Received
+                        </button>
+                      </>
                     )}
                     {order.status === "inprogress" && (
                       <button
@@ -244,8 +339,9 @@ function WashermanDashboard() {
                       </button>
                     )}
                     {order.status === "complete" && (
-                      <span className="text-green-700 font-semibold text-sm sm:text-base">
-                        ✅ Ready for Pickup
+                      <span className="flex items-center gap-1 text-green-700 font-semibold text-sm sm:text-base">
+                        <AiOutlineCheckCircle className="w-4 h-4" />
+                        Ready for Pickup
                       </span>
                     )}
                   </div>

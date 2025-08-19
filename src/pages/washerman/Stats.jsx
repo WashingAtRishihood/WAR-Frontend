@@ -17,7 +17,7 @@ function Stats() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userType = localStorage.getItem('userType');
         const washermanDataStr = localStorage.getItem('washermanData');
-        
+
         if (!isLoggedIn || userType !== 'washerman' || !washermanDataStr) {
             navigate('/washerman/login');
             return;
@@ -116,10 +116,19 @@ function Stats() {
             {/* Main Content */}
             <main className="flex flex-col flex-1 px-4 sm:px-6 py-24 sm:py-28 w-full max-w-6xl mx-auto">
                 {/* Header Section */}
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 text-center">
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#333] mb-2">
-                        Washerman Statistics
-                    </h1>
+
+                <div className="flex items-center gap-3 mb-4">
+                    <button
+                        onClick={() => navigate('/washerman/dashboard')}
+                        className="inline-flex items-center gap-2 text-gray-700 hover:text-[#a30c34] transition-colors"
+                        aria-label="Back to dashboard"
+                    >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <span className="font-medium text-sm sm:text-base">Back</span>
+                    </button>
+                </div>
+                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#333]">Washerman Statistics</h1>
                     <p className="text-gray-600">Performance Overview & Analytics</p>
                 </div>
 
@@ -265,18 +274,7 @@ function Stats() {
                         </>
                     )}
                 </div>
-
-                {/* Logout Button */}
-                <button
-                    onClick={handleLogout}
-                    className="mt-6 px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition self-center"
-                >
-                    Logout
-                </button>
             </main>
-
-            {/* Footer */}
-            <Footer className="fixed bottom-0 left-0 w-full z-10 shadow-md" />
         </div>
     );
 }

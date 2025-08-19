@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 function StudentSignup1() {
     const navigate = useNavigate();
@@ -11,6 +12,8 @@ function StudentSignup1() {
     const [otpSent, setOtpSent] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleSendOtp = () => {
         if (!email) {
@@ -93,23 +96,51 @@ function StudentSignup1() {
                                 required
                             />
 
-                            <input
-                                type="password"
-                                placeholder="New Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
-                                required
-                            />
+                            <div className="border border-gray-300 rounded-md bg-[#fffdfc] focus-within:ring-2 focus-within:ring-[#a30c34] flex items-center">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="New Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="flex-1 px-4 py-3 bg-transparent focus:outline-none text-lg"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    className="px-3 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showPassword ? (
+                                        <AiOutlineEyeInvisible size={20} />
+                                    ) : (
+                                        <AiOutlineEye size={20} />
+                                    )}
+                                </button>
+                            </div>
 
-                            <input
-                                type="password"
-                                placeholder="Confirm Password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
-                                required
-                            />
+                            <div className="border border-gray-300 rounded-md bg-[#fffdfc] focus-within:ring-2 focus-within:ring-[#a30c34] flex items-center">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    className="flex-1 px-4 py-3 bg-transparent focus:outline-none text-lg"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                                    className="px-3 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showConfirmPassword ? (
+                                        <AiOutlineEyeInvisible size={20} />
+                                    ) : (
+                                        <AiOutlineEye size={20} />
+                                    )}
+                                </button>
+                            </div>
 
                             <button
                                 type="submit"
