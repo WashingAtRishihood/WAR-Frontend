@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
-import config from "../../config";
+import config from "../../config.js";
 
 const Dashboard = () => {
     const [showOrdersModal, setShowOrdersModal] = useState(false);

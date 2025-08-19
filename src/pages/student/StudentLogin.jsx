@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
-import config from "../../config";
+import config from "../../config.js";
 
 function StudentLogin() {
     const navigate = useNavigate();
