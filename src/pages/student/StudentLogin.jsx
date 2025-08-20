@@ -37,12 +37,18 @@ function StudentLogin() {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Login successful:', data);
+                // Store token if provided
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
                 // Use auth context to handle login
                 login(data.student);
                 
                 // Navigate to dashboard
                 navigate("/student/dashboard");
             } else {
+                console.error('Login failed:', data);
                 setError(data.error || "Login failed. Please check your credentials.");
             }
         } catch (error) {

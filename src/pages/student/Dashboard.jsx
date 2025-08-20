@@ -3,38 +3,27 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import logo from "../../assets/rishihood-logo.webp";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 const Dashboard = () => {
     const [showOrdersModal, setShowOrdersModal] = useState(false);
     const navigate = useNavigate();
+    const { isLoggedIn, studentData } = useAuth();
     const [selectedCount, setSelectedCount] = useState(null);
     const [customCount, setCustomCount] = useState("");
     const [showSuccess, setShowSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [studentData, setStudentData] = useState(null);
     const [dashboardData, setDashboardData] = useState(null);
     const [error, setError] = useState("");
 
     useEffect(() => {
-        // Check if user is logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const studentDataStr = localStorage.getItem('studentData');
-
-        if (!isLoggedIn || !studentDataStr) {
+        if (!isLoggedIn || !studentData) {
             navigate('/student/login');
             return;
         }
-
-        try {
-            const student = JSON.parse(studentDataStr);
-            setStudentData(student);
-            fetchDashboardData(student.bag_no);
-        } catch (error) {
-            console.error('Error parsing student data:', error);
-            navigate('/student/login');
-        }
-    }, [navigate]);
+        fetchDashboardData(studentData.bag_no);
+    }, [isLoggedIn, studentData, navigate]);
 
     const fetchDashboardData = async (bagNo) => {
         try {

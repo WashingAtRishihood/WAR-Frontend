@@ -16,20 +16,41 @@ import StudentLookup from './pages/washerman/StudentLookup';
 import NotFound from './pages/NotFound';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PublicRoute } from './components/PublicRoute';
 
 function App() {
     return (
         <AuthProvider>
             <Router>
                 <Routes>
-                    {/* General Pages */}
-                    <Route path="/" element={<LaunchPage />} />
-                    <Route path="/home" element={<HomePage />} />
+                    {/* Public Pages - Redirect to dashboard if logged in */}
+                    <Route path="/" element={
+                        <PublicRoute>
+                            <LaunchPage />
+                        </PublicRoute>
+                    } />
+                    <Route path="/home" element={
+                        <PublicRoute>
+                            <HomePage />
+                        </PublicRoute>
+                    } />
 
-                    {/* Student Auth */}
-                    <Route path="/student/login" element={<StudentLogin />} />
-                    <Route path="/student/signup1" element={<StudentSignup1 />} />
-                    <Route path="/student/signup2" element={<StudentSignup2 />} />
+                    {/* Auth Pages - Redirect to dashboard if logged in */}
+                    <Route path="/student/login" element={
+                        <PublicRoute>
+                            <StudentLogin />
+                        </PublicRoute>
+                    } />
+                    <Route path="/student/signup1" element={
+                        <PublicRoute>
+                            <StudentSignup1 />
+                        </PublicRoute>
+                    } />
+                    <Route path="/student/signup2" element={
+                        <PublicRoute>
+                            <StudentSignup2 />
+                        </PublicRoute>
+                    } />
 
                     {/* Protected Student Pages */}
                     <Route
