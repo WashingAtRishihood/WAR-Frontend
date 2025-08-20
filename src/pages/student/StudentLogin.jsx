@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/rishihood-logo.webp";
+import { useAuth } from "../../contexts/AuthContext";
 
 function StudentLogin() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [enrollmentNo, setEnrollmentNo] = useState("");
     const [error, setError] = useState("");
@@ -35,10 +37,9 @@ function StudentLogin() {
             const data = await response.json();
 
             if (response.ok) {
-                // Store student data in localStorage for future use
-                localStorage.setItem('studentData', JSON.stringify(data.student));
-                localStorage.setItem('isLoggedIn', 'true');
-
+                // Use auth context to handle login
+                login(data.student);
+                
                 // Navigate to dashboard
                 navigate("/student/dashboard");
             } else {

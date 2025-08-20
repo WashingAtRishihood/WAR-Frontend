@@ -14,38 +14,77 @@ import WashermanDashboard from './pages/washerman/WashermanDashboard';
 import Stats from './pages/washerman/Stats';
 import StudentLookup from './pages/washerman/StudentLookup';
 import NotFound from './pages/NotFound';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                {/* General Pages */}
-                <Route path="/" element={<LaunchPage />} />
-                <Route path="/home" element={<HomePage />} />
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    {/* General Pages */}
+                    <Route path="/" element={<LaunchPage />} />
+                    <Route path="/home" element={<HomePage />} />
 
-                {/* Student Auth */}
-                <Route path="/student/login" element={<StudentLogin />} />
-                <Route path="/student/signup1" element={<StudentSignup1 />} />
-                <Route path="/student/signup2" element={<StudentSignup2 />} />
+                    {/* Student Auth */}
+                    <Route path="/student/login" element={<StudentLogin />} />
+                    <Route path="/student/signup1" element={<StudentSignup1 />} />
+                    <Route path="/student/signup2" element={<StudentSignup2 />} />
 
-                {/* Student Pages */}
-                <Route path="/student/dashboard" element={<StudentDashboard />} />
-                <Route path="/student/profile" element={<StudentProfile />} />
-                <Route path="/student/completed" element={<Completed />} />
-                <Route path="/student/incomplete" element={<Incomplete />} />
-                <Route path="/student/orders" element={<Orders />} />
+                    {/* Protected Student Pages */}
+                    <Route
+                        path="/student/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <StudentDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/student/profile"
+                        element={
+                            <ProtectedRoute>
+                                <StudentProfile />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/student/completed"
+                        element={
+                            <ProtectedRoute>
+                                <Completed />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/student/incomplete"
+                        element={
+                            <ProtectedRoute>
+                                <Incomplete />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/student/orders"
+                        element={
+                            <ProtectedRoute>
+                                <Orders />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                {/* Washerman Pages */}
-                <Route path="/washerman/login" element={<WashermanLogin />} />
-                <Route path="/washerman/dashboard" element={<WashermanDashboard />} />
-                <Route path="/washerman/stats" element={<Stats />} />
-                <Route path="/washerman/student-lookup" element={<StudentLookup />} />
-                
-                {/* 404 and catch-all */}
-                <Route path="/404" element={<NotFound />} />
-                <Route path="*" element={<Navigate to="/404" replace />} />
-            </Routes>
-        </Router>
+                    {/* Washerman Pages */}
+                    <Route path="/washerman/login" element={<WashermanLogin />} />
+                    <Route path="/washerman/dashboard" element={<WashermanDashboard />} />
+                    <Route path="/washerman/stats" element={<Stats />} />
+                    <Route path="/washerman/student-lookup" element={<StudentLookup />} />
+                    
+                    {/* 404 and catch-all */}
+                    <Route path="/404" element={<NotFound />} />
+                    <Route path="*" element={<Navigate to="/404" replace />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
     );
 }
 
