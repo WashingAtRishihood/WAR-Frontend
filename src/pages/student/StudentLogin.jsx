@@ -7,14 +7,14 @@ function StudentLogin() {
     const navigate = useNavigate();
     const { login } = useAuth();
     const [email, setEmail] = useState("");
-    const [enrollmentNo, setEnrollmentNo] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        if (!email || !enrollmentNo) {
+        if (!email || !password) {
             setError("Please fill in all fields");
             return;
         }
@@ -30,7 +30,7 @@ function StudentLogin() {
                 },
                 body: JSON.stringify({
                     email: email,
-                    enrollment_no: enrollmentNo
+                    password: password
                 })
             });
 
@@ -86,15 +86,12 @@ function StudentLogin() {
                         required
                     />
                     <input
-                        type="text"
-                        placeholder="Enter your enrollment number"
-                        value={enrollmentNo}
-                        onChange={(e) => setEnrollmentNo(e.target.value)}
-                        className="px-4 py-3 border border-gray-300 rounded-md bg-[#fffdfc] focus:outline-none focus:ring-2 focus:ring-[#a30c34] text-lg"
-                        required
-                    />
-
-                    {/* Error Message */}
+                        type="password"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-red-500"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />                    {/* Error Message */}
                     {error && (
                         <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-md p-3">
                             {error}
