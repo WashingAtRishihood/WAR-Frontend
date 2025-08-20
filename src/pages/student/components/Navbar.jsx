@@ -17,7 +17,7 @@ function Navbar() {
     
     const handleLogout = () => {
         setIsDropdownOpen(false);
-        logout(navigate);
+        navigate('/logout', { replace: true });
     };
 
     // Service hours logic

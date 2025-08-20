@@ -97,7 +97,7 @@ const Dashboard = () => {
         localStorage.removeItem('studentData');
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('userType');
-        navigate('/home');
+        navigate('/');
     };
 
     if (!studentData) {

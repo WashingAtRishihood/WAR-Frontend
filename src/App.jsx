@@ -17,23 +17,17 @@ import NotFound from './pages/NotFound';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { PublicRoute } from './components/PublicRoute';
+import { LogoutHandler } from './components/LogoutHandler';
 
 function App() {
     return (
         <AuthProvider>
             <Router>
                 <Routes>
-                    {/* Public Pages - Redirect to dashboard if logged in */}
-                    <Route path="/" element={
-                        <PublicRoute>
-                            <LaunchPage />
-                        </PublicRoute>
-                    } />
-                    <Route path="/home" element={
-                        <PublicRoute>
-                            <HomePage />
-                        </PublicRoute>
-                    } />
+                    {/* Public Pages - Always accessible */}
+                    <Route path="/" element={<LaunchPage />} />
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/logout" element={<LogoutHandler />} />
 
                     {/* Auth Pages - Redirect to dashboard if logged in */}
                     <Route path="/student/login" element={
