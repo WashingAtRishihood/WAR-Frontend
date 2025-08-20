@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LaunchPage from './pages/LaunchPage';
 import HomePage from './pages/HomePage';
 import StudentLogin from './pages/student/StudentLogin';
@@ -13,6 +13,7 @@ import WashermanLogin from './pages/washerman/WashermanLogin';
 import WashermanDashboard from './pages/washerman/WashermanDashboard';
 import Stats from './pages/washerman/Stats';
 import StudentLookup from './pages/washerman/StudentLookup';
+import NotFound from './pages/NotFound';
 
 function App() {
     return (
@@ -39,6 +40,10 @@ function App() {
                 <Route path="/washerman/dashboard" element={<WashermanDashboard />} />
                 <Route path="/washerman/stats" element={<Stats />} />
                 <Route path="/washerman/student-lookup" element={<StudentLookup />} />
+                
+                {/* 404 and catch-all */}
+                <Route path="/404" element={<NotFound />} />
+                <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
         </Router>
     );

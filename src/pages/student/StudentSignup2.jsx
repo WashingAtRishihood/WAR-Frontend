@@ -16,9 +16,21 @@ function Signup2() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const isValidBagNo = (bagNo) => {
+        return /^[BG]-\d+$/.test(bagNo.toUpperCase());
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === 'bag_no') {
+            // Convert to uppercase and validate format
+            const formatted = value.toUpperCase();
+            if (formatted === '' || /^[BG](-\d*)?$/.test(formatted)) {
+                setFormData(prev => ({ ...prev, [name]: formatted }));
+            }
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -32,6 +44,11 @@ function Signup2() {
             !formData.residency_no
         ) {
             setError("Please fill in all fields");
+            return;
+        }
+
+        if (!isValidBagNo(formData.bag_no)) {
+            setError("Invalid bag number format. Use B- or G- followed by numbers");
             return;
         }
 
