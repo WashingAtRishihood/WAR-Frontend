@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
 import logo from "../../../assets/rishihood-logo.webp";
 import { Bell, User, LogOut, UserCheck, Clock, Plus, Menu, X, Home, FileText, Settings, Shield, UserCircle, Star } from "lucide-react";
 import Footer from "./Footer";
@@ -12,15 +13,11 @@ function Navbar() {
     const [hasRated, setHasRated] = useState(false);
     const dropdownRef = useRef();
 
+    const { logout } = useAuth();
+    
     const handleLogout = () => {
-        // Clear all student data from localStorage
-        localStorage.removeItem('studentData');
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('userType');
-        
-        // Close dropdown and navigate to home
         setIsDropdownOpen(false);
-        navigate('/home');
+        logout(navigate);
     };
 
     // Service hours logic

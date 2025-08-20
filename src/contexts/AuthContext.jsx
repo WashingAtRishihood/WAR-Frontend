@@ -59,12 +59,17 @@ export const AuthProvider = ({ children }) => {
         setStudentData(data);
     };
 
-    const logout = () => {
+    const logout = (navigate) => {
         console.log('Logging out, clearing storage');
         localStorage.removeItem('studentData');
         localStorage.removeItem('isLoggedIn');
         setIsLoggedIn(false);
         setStudentData(null);
+        
+        // Redirect to home page
+        if (navigate) {
+            navigate('/home');
+        }
     };
 
     return (
